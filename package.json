@@ -1,0 +1,10 @@
+{
+	"name": "paper",
+	"description": "An IDE with endless possibilities.",
+	"homepage": "https://github.com/minifyre/paper",
+	"license": "MIT",
+	"version": "0.5.0",
+	"devDependencies": {
+		"cherub": "minifyre/cherub"
+	}
+}
