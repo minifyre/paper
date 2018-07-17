@@ -4,6 +4,10 @@
 	"homepage": "https://github.com/minifyre/paper",
 	"license": "MIT",
 	"version": "0.5.0",
+	"dependencies": {
+		"pane": "minifyre/pane",
+		"qwick": "minifyre/qwick"
+	},
 	"devDependencies": {
 		"cherub": "minifyre/cherub"
 	}
