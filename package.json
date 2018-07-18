@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"version": "0.5.0",
 	"dependencies": {
+		"chant": "minifyre/chant",
 		"pane": "minifyre/pane",
 		"qwick": "minifyre/qwick"
 	},
