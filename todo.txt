@@ -1,1 +1,9 @@
-rename 'node_modules' to 'shared' after switching from Node to Deno
+ideas to evaluate
+	change server scripts to use the paper.logic.js naming scheme
+	have logic require util & export it up the chain but don't include it in input.js' export
+	Node.js to Deno (waiting on deno to become stable)
+		replace module.exports with export statements
+		replace require(path) with import statements
+		rename 'node_modules' to 'shared'
+goals needing steps
+todo
