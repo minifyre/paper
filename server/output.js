@@ -1,9 +1,9 @@
 'use strict';
 const
 fs=require('fs'),
-{config}=require('./config.js'),
-{util}=require('./util.js'),
+config=require('./config.js'),
 {logic}=require('./logic.js'),
+{util}=require('./util.js'),
 output={};
 output.file=filePath=>util.callback2promise(fs.readFile)(filePath);
 output.response=function(res,opts)
