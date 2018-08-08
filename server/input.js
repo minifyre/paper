@@ -36,6 +36,7 @@ input.httpRequest=function(req,res)
 input.init=function(opts={})
 {
 	const
+	ip=output.ip(),
 	{port}=Object.assign({},config.server,opts),
 	server=http.createServer(input.httpRequest).listen(port);//static http server
 	//@todo public & private defaults (only sync public data with server)
@@ -45,23 +46,23 @@ input.init=function(opts={})
 	.then(function(self)
 	{
 		state=self;
-		/*state.auth=function(req)
+		state.auth=function(req)
 		{
 			return new Promise(function(pass,fail)
 			{
 				pass();
 			});
-		};*/
+		};
 	});
-	/*if (err.code==='EADDRINUSE')
-	{
-		// port is currently in use
-	}*/
+//	if (err.code==='EADDRINUSE')
+//	{
+//		// port is currently in use
+//	}
 	process.on('uncaughtException',function(err)
 	{
 		console.error(err);
 		console.log("Node NOT Exiting...");
 	});
-	console.log('Running at http://127.0.0.1:'+port+'/');
+	console.log('Running at http://'+ip+':'+port+'/');
 };
 module.exports={input,logic,output};
