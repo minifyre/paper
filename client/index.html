@@ -1,3 +1,44 @@
 <!Doctype html>
-<main>Hello World</main>
-<script></script>
+<title>Demo</title>
+<meta charset=utf-8>
+<meta name=mobile-web-app-capable content=yes>
+<meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<style>
+	html,
+	body
+	{
+		height:100%;
+		margin:0;
+		padding:0;
+		width:100%;
+	}
+	.pane
+	{
+		border:0;
+		display:block;
+		float:left;
+		height:50vh;
+		margin:0;
+		outline:1px solid #222;
+		outline-offset:-1px;
+		padding:0;
+		resize:none;
+		width:50%;
+	}
+	textarea
+	{
+		background-color:#222;
+		color:#fff;
+	}
+	canvas
+	{
+		background-color:#fff;
+		background-image:
+			linear-gradient(0deg,rgba(153,153,153,0.5) 50%,transparent 50%),
+			linear-gradient(90deg,transparent 50%,rgba(153,153,153,0.5) 50%);
+		background-size:100% 4rem, 4rem 100%;
+	}
+</style>
+<main></main>
+<script src="../js/qwick/qwick.js"></script>
+<script src=index.js type=module></script>
