@@ -1,20 +1,18 @@
 'use strict';
-//modules
 import {chant} from '../js/chant/chant.js';
 //import {pane} from '../js/pane/pane.js';
-//namespaces
 const
 state=chant(),
 input={},
 logic={},
 output={};
-//@todo actions do not seem to have id props here...
-input.updatePic=function(action)
+input.updatePic=function(action)//@todo actions don't have id props...
 {
 	output.renderPic(action.val);
 };
 input.updateTxt=function(action)
 {
+	//console.log(action.id,state.get('private.id'));
 	if (action.id!==state.get('private.id'))
 	{
 		output.renderCode(action.val);
@@ -71,16 +69,10 @@ input.drawing=function(evt)
 };
 input.init=function()
 {
-	q('main').last
-	(
-		output.paneBrowser(),
-		output.paneTxt(),
-		output.paneVid(),
-		output.panePic()
-	);
 	state.with()
-	.then(function()//setup inital state if no other clients initated it
+	.then(function()
 	{
+		//setup inital state if no other clients initated it
 		const
 		keys=state.keys('public.files'),
 		no=x=>!keys.includes(x);
@@ -91,15 +83,25 @@ input.init=function()
 			id:'PUv66718DII',
 			time:0.556959
 		}):'';
+		//+state listeners
 		state.on({path:'public.files.pic',type:'set',func:input.updatePic});
 		state.on({path:'public.files.txt',type:'set',func:input.updateTxt});
 		state.on({path:'public.files.vid',type:'set',func:input.updateVid});
+		//setup panes
+		q('main').last
+		(
+			output.paneBrowser(),
+			output.paneTxt(),
+			output.paneVid(),
+			output.panePic()
+		);		
+		//inital renders
 		output.renderCode(state.get('public.files.txt.data'));
 		output.renderPic();
+		output.initVideoPlayer();
+		input.eventHandlers();
 	})
 	.catch(console.error);
-	output.initVideoPlayer();
-	input.eventHandlers();
 };
 input.txt=function(evt)
 {
