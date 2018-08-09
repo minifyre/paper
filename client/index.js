@@ -8,12 +8,10 @@ state=chant(),
 input={},
 logic={},
 output={};
+//@todo actions do not seem to have id props here...
 input.updatePic=function(action)
 {
-	if (action.id!==state.get('private.id'))
-	{
-		output.renderPic(action.val);
-	}
+	output.renderPic(action.val);
 };
 input.updateTxt=function(action)
 {
@@ -39,7 +37,6 @@ input.drawing=function(evt)
 	const
 	target=q(evt.target),
 	el=target.norm(),
-	ctx=el.getContext('2d'),
 	drawPt=function(evt)
 	{
 		const
@@ -58,8 +55,6 @@ input.drawing=function(evt)
 		x=Math.round((evt.clientX-can.x)*(img.w/can.w)),
 		y=Math.round((evt.clientY-can.y)*(img.h/can.h));
 		state.set('public.files.pic.pts.'+x+'x'+y,1);
-		//ctx.fillRect(x,y,1,1);//@todo remove this & use output.render instead
-		//@todo add pt to state
 	},
 	cleanup=function()
 	{
