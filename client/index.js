@@ -86,22 +86,16 @@ input.init=function()
 	state.with()
 	.then(function()//setup inital state if no other clients initated it
 	{
-		if (!state.get('public.files').txt)
+		const
+		keys=state.keys('public.files'),
+		no=x=>!keys.includes(x);
+		no('txt')?state.set('public.files.txt',{data:''}):'';
+		no('pic')?state.set('public.files.pic',{pts:{}}):'';
+		no('vid')?state.set('public.files.vid',
 		{
-			state.set('public.files.txt',{data:''});
-		}
-		if (!state.get('public.files').pic)
-		{
-			state.set('public.files.pic',{pts:{}});
-		}
-		if (!state.get('public.files').vid)
-		{
-			state.set('public.files.vid',
-			{
-				id:'PUv66718DII',
-				time:0.556959
-			});
-		}
+			id:'PUv66718DII',
+			time:0.556959
+		}):'';
 		state.on({path:'public.files.pic',type:'set',func:input.updatePic});
 		state.on({path:'public.files.txt',type:'set',func:input.updateTxt});
 		state.on({path:'public.files.vid',type:'set',func:input.updateVid});
