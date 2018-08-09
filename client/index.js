@@ -12,18 +12,12 @@ input.updatePic=function(action)//@todo actions don't have id props...
 };
 input.updateTxt=function(action)
 {
-	//console.log(action.id,state.get('private.id'));
-	if (action.id!==state.get('private.id'))
-	{
-		output.renderCode(action.val);
-	}
+	action.device!==state.get('private.id')?output.renderCode(action.val):
+											output.renderBrowser(action.val);
 };
 input.updateVid=function(action)
 {
-	if (action.id!==state.get('private.id'))
-	{
-		output.renderVid(action.val);
-	}
+	action.device!==state.get('private.id')?output.renderVid(action.val):'';
 };
 input.eventHandlers=function()
 {
@@ -120,8 +114,8 @@ output.renderCode=function(txt)
 };
 output.renderEditor=function(txt)
 {
-	const el=q('textarea');
-	el.val(txt);//.html(txt);//@todo determine if val is actually doing anything
+	q('textarea').val(txt);
+	//.html(txt);//@todo did html preserve the cursor position?
 };
 output.renderBrowser=function(txt)
 {
