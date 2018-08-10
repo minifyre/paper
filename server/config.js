@@ -40,11 +40,12 @@ config.state=//default
 {
 	public:
 	{
-		apps:{},//@todo convert objects to arrays
-		devices:{},
 		files:{},
+		tabs:{},
+		apps:{},
 		panes:{},
-		tabs:{}
+		devices:{},
+		users:{}
 	}
 };
 module.exports=config;
