@@ -47,7 +47,7 @@ output.paneStyle=function(json)
 	.reduce(function(style,entry)
 	{
 		const [key,val]=entry;
-		return style+=`${key}:${val}%;`;
+		return style+=`${key}:${val}%; `;
 	},'');
 };
 output.tab=function(json)
