@@ -1,3 +1,3 @@
 cd server
 node -v
-node index.js
+node --experimental-modules index.js
