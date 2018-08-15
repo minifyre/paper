@@ -1,0 +1,54 @@
+<!Doctype html>
+<title>Demo</title>
+<meta charset=utf-8>
+<meta name=mobile-web-app-capable content=yes>
+<meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<style>
+	html,
+	body
+	{
+		height:100%;
+		margin:0;
+		padding:0;
+		width:100%;
+	}
+	.pane
+	{
+		border:none;
+		display:block;
+		margin:0;
+		outline:1px solid #222;
+		outline-offset:-1px;
+		padding:0;
+	}
+	textarea
+	{
+		background-color:#222;
+		border:0;
+		color:#fff;
+		resize:none;
+	}
+	canvas
+	{
+		background-color:#fff;
+		background-image:
+			linear-gradient(0deg,rgba(153,153,153,0.5) 50%,transparent 50%),
+			linear-gradient(90deg,transparent 50%,rgba(153,153,153,0.5) 50%);
+		background-size:100% 4rem, 4rem 100%;
+	}
+	.panes
+	{
+		height:100vh;
+		width:100vw;
+	}
+	.pane
+	{
+		display:block;
+		height:50%;
+		float:left;
+		width:50%;
+	}
+</style>
+<main class=panes></main>
+<script src="../js/qwick/qwick.js"></script>
+<script src=demo.js type=module></script>
