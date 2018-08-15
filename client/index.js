@@ -65,17 +65,25 @@ input.drawing=function(evt)
 input.init=async function()
 {
 	await state.with();
-	const
-	userId='tmpUsrId-'+state.get('private.id'),//@todo change this
-	pageId=state.get('private.id');
-	if (!state.keys('public.views').length)
-	{
-		state.set(`public.views.${userId}`,paper.logic.mkPane({id:userId,type:'paper'}));
-	}
-	//add new tab for device
-	state.set(`public.views.${pageId}`,paper.logic.mkPane({id:pageId,type:'pane'}));
-	
 
+	const
+	preview=q.create('textarea',{class:'state',style:'height:100vh; width:100vw;'}),
+	showState=()=>preview.html(JSON.stringify(state.get(''),null,4));
+	q('body').first(preview);
+	showState();
+	state.on({type:'delete',func:showState});
+	state.on({type:'set',func:showState});
+	// const
+	// userId='tmpUsrId-'+state.get('private.id'),//@todo change this
+	// pageId=state.get('private.id');
+	// if (!state.keys('public.views').length)
+	// {
+	// 	state.set(`public.views.${userId}`,paper.logic.mkPane({id:userId,type:'paper'}));
+	// }
+	// //add new tab for device
+	// state.set(`public.views.${pageId}`,paper.logic.mkPane({id:pageId,type:'pane'}));
+	
+	
 	//state.push(`public.views.${userId}.tabs`)
 		// if (state.values('public.panes').length<4)
 		// {
