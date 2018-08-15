@@ -64,34 +64,77 @@ input.drawing=function(evt)
 };
 input.init=async function()
 {
-	await state.with();//@todo add error hander
+	await state.with();
+
 	const
-	keys=state.keys('public.files'),
-	no=x=>!keys.includes(x);
-	no('txt')?state.set('public.files.txt',{data:''}):'';
-	no('pic')?state.set('public.files.pic',{pts:{}}):'';
-	no('vid')?state.set('public.files.vid',
-	{
-		id:'PUv66718DII',
-		time:0.556959
-	}):'';
-	//+state listeners
-	state.on({path:'public.files.pic',type:'set',func:input.updatePic});
-	state.on({path:'public.files.txt',type:'set',func:input.updateTxt});
-	state.on({path:'public.files.vid',type:'set',func:input.updateVid});
-	//setup panes
-	q('main').last
-	(
-		output.paneTxt(),
-		output.paneBrowser(),
-		output.paneVid(),
-		output.panePic()
-	);		
-	//inital renders
-	output.renderCode(state.get('public.files.txt.data'));
-	output.renderPic();
-	output.initVideoPlayer();
-	input.eventHandlers();
+	preview=q.create('textarea',{class:'state',style:'height:100vh; width:100vw;'}),
+	showState=()=>preview.html(JSON.stringify(state.get(''),null,4));
+	q('body').first(preview);
+	showState();
+	state.on({type:'delete',func:showState});
+	state.on({type:'set',func:showState});
+	// const
+	// userId='tmpUsrId-'+state.get('private.id'),//@todo change this
+	// pageId=state.get('private.id');
+	// if (!state.keys('public.views').length)
+	// {
+	// 	state.set(`public.views.${userId}`,paper.logic.mkPane({id:userId,type:'paper'}));
+	// }
+	// //add new tab for device
+	// state.set(`public.views.${pageId}`,paper.logic.mkPane({id:pageId,type:'pane'}));
+	
+	
+	//state.push(`public.views.${userId}.tabs`)
+		// if (state.values('public.panes').length<4)
+		// {
+		// 	[
+		// 		{type:'browser'},
+		// 		{x:50,type:'code'},
+		// 		{y:50,type:'youtubePlayer'},
+		// 		{x:50,y:50,type:'raster'}
+		// 	]
+		// 	.forEach(function(opts)
+		// 	{
+		// 		const
+		// 		pane=paper.logic.mkPane(Object.assign(opts,{height:50,width:50})),
+		// 		{id}=pane;
+		// 		state.set(`public.panes.${id}`,pane);
+		// 	});
+		// }
+		// const
+		// panes=state.values('public.panes').reduce((rtn,pane)=>rtn+paper.output.pane(pane),'');
+		// q('.panes').html(panes);
+		//setup inital state if no other clients initated it
+		//old code
+	// 	const
+	// 	keys=state.keys('public.files'),
+	// 	no=x=>!keys.includes(x);
+	// 	no('txt')?state.set('public.files.txt',{data:''}):'';
+	// 	no('pic')?state.set('public.files.pic',{pts:{}}):'';
+	// 	no('vid')?state.set('public.files.vid',
+	// 	{
+	// 		id:'PUv66718DII',
+	// 		time:0.556959
+	// 	}):'';
+	// 	//+state listeners
+	// 	state.on({path:'public.files.pic',type:'set',func:input.updatePic});
+	// 	state.on({path:'public.files.txt',type:'set',func:input.updateTxt});
+	// 	state.on({path:'public.files.vid',type:'set',func:input.updateVid});
+	// 	//setup panes
+	// 	q('main').last
+	// 	(
+	// 		output.paneVid(),
+	// 		output.panePic(),
+	// 		output.paneTxt(),
+	// 		output.paneBrowser()
+	// 	);		
+	// 	//inital renders
+	// 	output.renderCode(state.get('public.files.txt.data'));
+	// 	output.renderPic();
+	// 	output.initVideoPlayer();
+	// 	input.eventHandlers();
+	// })
+	// .catch(console.error);
 };
 input.txt=function(evt)
 {
