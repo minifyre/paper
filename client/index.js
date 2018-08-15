@@ -1,6 +1,6 @@
 'use strict';
 import {chant} from '../js/chant/chant.js';
-//import {pane} from '../js/pane/pane.js';
+import {paper} from './paper.js';
 const
 state=chant(),
 input={},
@@ -8,7 +8,7 @@ logic={},
 output={};
 input.updatePic=function(action)//@todo actions don't have id props...
 {
-	output.renderPic(action.val);
+	output.renderPic();
 };
 input.updateTxt=function(action)
 {
@@ -44,8 +44,9 @@ input.drawing=function(evt)
 			h:el.height,
 			w:el.width
 		},
-		x=Math.round((evt.clientX-can.x)*(img.w/can.w)),
-		y=Math.round((evt.clientY-can.y)*(img.h/can.h));
+		x=Math.round((evt.pageX-can.x)*(img.w/can.w)),
+		y=Math.round((evt.pageY-can.y)*(img.h/can.h));
+		console.log(can,evt);
 		state.set('public.files.pic.pts.'+x+'x'+y,1);
 	},
 	cleanup=function()
@@ -61,41 +62,71 @@ input.drawing=function(evt)
 	.on('pointerup',cleanup);
 	drawPt(evt);
 };
-input.init=function()
+input.init=async function()
 {
-	state.with()
-	.then(function()
+	await state.with();
+	const
+	userId='tmpUsrId-'+state.get('private.id'),//@todo change this
+	pageId=state.get('private.id');
+	if (!state.keys('public.views').length)
 	{
+		state.set(`public.views.${userId}`,paper.logic.mkPane({id:userId,type:'paper'}));
+	}
+	//add new tab for device
+	state.set(`public.views.${pageId}`,paper.logic.mkPane({id:pageId,type:'pane'}));
+	
+
+	//state.push(`public.views.${userId}.tabs`)
+		// if (state.values('public.panes').length<4)
+		// {
+		// 	[
+		// 		{type:'browser'},
+		// 		{x:50,type:'code'},
+		// 		{y:50,type:'youtubePlayer'},
+		// 		{x:50,y:50,type:'raster'}
+		// 	]
+		// 	.forEach(function(opts)
+		// 	{
+		// 		const
+		// 		pane=paper.logic.mkPane(Object.assign(opts,{height:50,width:50})),
+		// 		{id}=pane;
+		// 		state.set(`public.panes.${id}`,pane);
+		// 	});
+		// }
+		// const
+		// panes=state.values('public.panes').reduce((rtn,pane)=>rtn+paper.output.pane(pane),'');
+		// q('.panes').html(panes);
 		//setup inital state if no other clients initated it
-		const
-		keys=state.keys('public.files'),
-		no=x=>!keys.includes(x);
-		no('txt')?state.set('public.files.txt',{data:''}):'';
-		no('pic')?state.set('public.files.pic',{pts:{}}):'';
-		no('vid')?state.set('public.files.vid',
-		{
-			id:'PUv66718DII',
-			time:0.556959
-		}):'';
-		//+state listeners
-		state.on({path:'public.files.pic',type:'set',func:input.updatePic});
-		state.on({path:'public.files.txt',type:'set',func:input.updateTxt});
-		state.on({path:'public.files.vid',type:'set',func:input.updateVid});
-		//setup panes
-		q('main').last
-		(
-			output.paneBrowser(),
-			output.paneTxt(),
-			output.paneVid(),
-			output.panePic()
-		);		
-		//inital renders
-		output.renderCode(state.get('public.files.txt.data'));
-		output.renderPic();
-		output.initVideoPlayer();
-		input.eventHandlers();
-	})
-	.catch(console.error);
+		//old code
+	// 	const
+	// 	keys=state.keys('public.files'),
+	// 	no=x=>!keys.includes(x);
+	// 	no('txt')?state.set('public.files.txt',{data:''}):'';
+	// 	no('pic')?state.set('public.files.pic',{pts:{}}):'';
+	// 	no('vid')?state.set('public.files.vid',
+	// 	{
+	// 		id:'PUv66718DII',
+	// 		time:0.556959
+	// 	}):'';
+	// 	//+state listeners
+	// 	state.on({path:'public.files.pic',type:'set',func:input.updatePic});
+	// 	state.on({path:'public.files.txt',type:'set',func:input.updateTxt});
+	// 	state.on({path:'public.files.vid',type:'set',func:input.updateVid});
+	// 	//setup panes
+	// 	q('main').last
+	// 	(
+	// 		output.paneVid(),
+	// 		output.panePic(),
+	// 		output.paneTxt(),
+	// 		output.paneBrowser()
+	// 	);		
+	// 	//inital renders
+	// 	output.renderCode(state.get('public.files.txt.data'));
+	// 	output.renderPic();
+	// 	output.initVideoPlayer();
+	// 	input.eventHandlers();
+	// })
+	// .catch(console.error);
 };
 input.txt=function(evt)
 {
@@ -134,7 +165,7 @@ output.renderPic=function()
 	ctx=el.getContext('2d'),
 	{height,width}=el;
 	ctx.clearRect(0,0,width,height);
-	Object.keys(state.get('public.files.pic.pts'))
+	state.keys('public.files.pic.pts')
 	.forEach(function(pt)
 	{
 		const [x,y]=pt.split('x');
