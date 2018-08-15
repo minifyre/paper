@@ -18,18 +18,18 @@ logic=
 },
 output=
 {
-	btn:(type,title)=>`<button title=${title} data-target="${type}">${type}</button>`
+	btn:(type,title)=>`<button title="${title}" data-target="${type}">${type}</button>`
 },
 input={},
 paper={input,logic,output};
 output.pane=function(json)
 {
 	const
-	{app,id}=json,
+	{id,type}=json,
 	btnFullscreen=output.btn('toggleFullscreen','toggle fullscreen'),
 	btnNewTab=output.btn('tabOpen','new tab'),
 	style=output.paneStyle(json);
-	return `<div class="col pane" data-app=${app} id=${id} style="${style}">
+	return `<div class="col pane" data-type=${type} id=${id} style="${style}">
 		<header class=col>
 			<div class=row>
 				${btnFullscreen}
@@ -44,11 +44,7 @@ output.paneStyle=function(json)
 {
 	const {height,width,x:left,y:top}=json;
 	return Object.entries({height,left,top,width})
-	.reduce(function(style,entry)
-	{
-		const [key,val]=entry;
-		return style+=`${key}:${val}%; `;
-	},'');
+	.reduce((style,keyProp)=>style+=`${keyProp[0]}:${keyProp[1]}%; `,'');
 };
 output.tab=function(json)
 {
