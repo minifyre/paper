@@ -1,0 +1,107 @@
+/*reset*/
+*
+{
+	box-sizing:border-box;
+}
+html,
+body,
+main
+{
+	display:flex;
+	flex-direction:column;
+	height:100%;
+	margin:0;
+	padding:0;
+	position:relative;
+	width:100%;
+}
+/*layout*/
+.col
+{
+	display:flex;
+	flex-direction:column;
+}
+.row
+{
+	display:flex;
+	flex-direction:row;
+}
+.stretch
+{
+	flex:1 1 auto;
+}
+.shrink
+{
+	flex:0 0 auto;
+}
+/*pane-specific*/
+[data-view-pane="layer"] [data-view-pane]:not([data-view-pane="layer"]),
+[data-view-pane="layers"] [data-view-pane]:not([data-view-pane="layers"])
+{
+	display:none;
+}
+	.panes .resize-layer
+	{
+		height:100%;
+		left:0;
+		position:absolute;
+		top:0;
+		width:100%;
+	}
+	.pane
+	{
+		position:absolute;
+	}
+	.pane header
+	{
+		background:#eee;
+	}
+		.pane header .src
+		{
+			border:0;
+		}
+		.pane header input,
+		.pane header button
+		{
+			margin:0.2rem;
+		}
+		.pane header>.row
+		{
+			padding:0.2rem;
+		}
+		.pane header>.row:first-child
+		{
+			padding-bottom:0;
+		}
+		.pane header>.row:last-child
+		{
+			padding-top:0;
+		}
+		.pane header button
+		{
+			border:0;
+			border-radius:0;
+			background:#fff;
+		}
+		.pane .tab
+		{
+			align-items:center;
+			justify-content:center;
+			padding:0 0.25rem;
+		}
+			.pane .tab .icon
+			{
+				background:#999;
+				height:1rem;
+				margin:0.25rem;
+				width:1rem;
+			}
+			.pane .tab:hover
+			{
+				background:rgba(255,255,255,0.8);
+				cursor:pointer;
+			}
+			.pane .tab .icon:hover
+			{
+				background:#c00;
+			}

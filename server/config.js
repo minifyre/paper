@@ -5,6 +5,7 @@ config.mimeTypes=
 	//web
 	html:'text/html',
 	js:'text/javascript',
+	mjs:'text/javascript',
 	css:'text/css',
 	json:'application/json',
 	//doc
@@ -40,11 +41,12 @@ config.state=//default
 {
 	public:
 	{
-		apps:{},//@todo convert objects to arrays
-		devices:{},
 		files:{},
+		tabs:{},
+		apps:{},
 		panes:{},
-		tabs:{}
+		devices:{},
+		users:{}
 	}
 };
 module.exports=config;
