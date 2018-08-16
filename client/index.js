@@ -86,7 +86,7 @@ input.init=async function()
 		output.paneBrowser(),
 		output.paneVid(),
 		output.panePic()
-	);		
+	);
 	//inital renders
 	output.renderCode(state.get('public.files.txt.data'));
 	output.renderPic();
