@@ -65,7 +65,9 @@ input.drawing=function(evt)
 input.init=async function()
 {
 	await state.with();
-
+	//add arbitrary user to data store @todo revamp when login functionality is added
+	state.set('private.user',state.keys('public.users')[0]);
+	//live state preview
 	const
 	preview=q.create('textarea',{class:'state',style:'height:100vh; width:100vw;'}),
 	showState=()=>preview.html(JSON.stringify(state.get(''),null,4));
