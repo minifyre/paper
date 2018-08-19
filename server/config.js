@@ -45,7 +45,6 @@ config.state=//default
 	{
 		files:{},
 		tabs:{},
-		apps:{},
 		panes:{},
 		devices:{},
 		users:
