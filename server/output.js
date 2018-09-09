@@ -2,9 +2,7 @@
 const
 fs=require('fs'),
 os=require('os'),
-config=require('./config.js'),
-{logic}=require('./logic.js'),
-{util}=require('./util.js'),
+{config,logic,util}=require('./logic.js'),
 output={}
 output.file=filePath=>util.callback2promise(fs.readFile,filePath)
 output.ip=function(interfaces=os.networkInterfaces())
@@ -23,4 +21,4 @@ output.response=function(res,opts)
 	res.writeHead(code,{'Content-Type':type});
 	res.end(data,encoding);
 }
-module.exports={logic,output}
+module.exports={config,logic,output,util}

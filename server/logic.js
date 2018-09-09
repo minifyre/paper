@@ -1,4 +1,7 @@
 'use strict'
-const logic={}
+const
+config=require('./config.js'),
+{util}=require('./util.js'),
+logic={}
 logic.ext=x=>(x.split('.')||['']).pop().toLowerCase()
-module.exports={logic}
+module.exports={config,logic,util}
