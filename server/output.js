@@ -9,16 +9,14 @@ output.ip=function(interfaces=os.networkInterfaces())
 {
 	return	Object.values(interfaces)
 			.map(x=>Object.values(x))
-			.reduce((arr,x)=>arr.concat(x),[])//flatten
+			.reduce((arr,x)=>arr.concat(x),[])//flatten array
 			.filter(({family,internal})=>family==='IPv4'&&!internal)
 			.map(({address})=>address)[0]
 }
 output.response=function(res,opts)
 {
-	const
-	defaults=util.clone(config.response),
-	{code,data,encoding,type}=Object.assign({},defaults,opts);
-	res.writeHead(code,{'Content-Type':type});
-	res.end(data,encoding);
+	const {code,data,encoding,type}=Object.assign({},config.response,opts)
+	res.writeHead(code,{'Content-Type':type})
+	res.end(data,encoding)
 }
 module.exports={config,logic,output,util}
