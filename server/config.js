@@ -1,5 +1,5 @@
-'use strict';
-const config={};
+'use strict'
+const config={}
 config.mimeTypes=
 {
 	//web
@@ -25,18 +25,18 @@ config.mimeTypes=
 	otf:'application/font-otf',
 	//vector images
 	svg:'image/svg+xml'
-};
+}
 config.response=
 {
 	code:200,
 	data:'',
 	encoding:'utf-8',
 	type:'application/octet-stream'
-};
+}
 config.server=
 {
 	port:8080
-};
+}
 //@todo remove hardcoded users & import them from a different source
 //also, don't pass the pwd hash property onto users
 config.state=//default
@@ -57,5 +57,5 @@ config.state=//default
 			}
 		}
 	}
-};
-module.exports=config;
+}
+module.exports=config
