@@ -11,15 +11,15 @@ input.httpRequest=function({url},res)
 			!(url.split('/')||['']).pop().match(/\./)?url+'/index.html':
 			url,
 	ext=logic.ext(path),
-	type=config.mimeTypes[ext]
-	return output.file('../client'+path)
+	type=config.mimeTypes[ext],
+	fail=data=>output.response(res,{code:500,data,type:'text/plain'})
+	//@todo make sure files above paper directory cannot be served up
+	return path.match(/^\/server/)?fail()://disallow sending server files
+	output.file('../client'+path)
 	.catch(function()//attempt to serve node modules from root dir of modules
 	{//avoids needing to install duplicates of modules in lower dirs
-		const
-		first=path.indexOf('node_modules'),
-		last=path.lastIndexOf('node_modules'),
-		url=first!==last?path.slice(last-1):path
-		return output.file('..'+url)
+		const last=path.lastIndexOf('node_modules')
+		return output.file('..'+path.slice(last!==-1?last-1:0))
 	})
 	.catch(function(err)
 	{
@@ -28,7 +28,7 @@ input.httpRequest=function({url},res)
 				Promise.reject('Error: '+err.code)
 	})
 	.then(data=>output.response(res,{data,type}))
-	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
+	.catch(fail)
 }
 input.init=function(opts={})
 {
