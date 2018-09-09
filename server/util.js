@@ -1,14 +1,11 @@
 'use strict'
 const util={}
-util.callback2promise=function(func)
+util.callback2promise=function(func,...args)
 {
-	return function(...args)
+	return new Promise(function(res,rej)
 	{
-		return new Promise(function(res,rej)
-		{
-			func(...args,(err,data)=>err?rej(err):res(data))
-		})
-	}
+		func(...args,(err,data)=>err?rej(err):res(data))
+	})
 }
 util.clone=json=>JSON.parse(JSON.stringify(json))
 module.exports={util}

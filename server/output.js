@@ -6,7 +6,7 @@ config=require('./config.js'),
 {logic}=require('./logic.js'),
 {util}=require('./util.js'),
 output={}
-output.file=filePath=>util.callback2promise(fs.readFile)(filePath)
+output.file=filePath=>util.callback2promise(fs.readFile,filePath)
 output.ip=function(interfaces=os.networkInterfaces())
 {
 	return	Object.values(interfaces)
