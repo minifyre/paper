@@ -7,23 +7,13 @@ config=require('./config.js'),
 {util}=require('./util.js'),
 output={}
 output.file=filePath=>util.callback2promise(fs.readFile)(filePath)
-output.ip=function()
+output.ip=function(interfaces=os.networkInterfaces())
 {
-	const
-	addresses=[],
-	interfaces=os.networkInterfaces()
-	for (let i in interfaces)//@todo switch to Object.keys?
-	{
-		for (let i2 in interfaces[i])
-		{
-			const address=interfaces[i][i2];
-			if (address.family==='IPv4'&&!address.internal)
-			{
-				addresses.push(address.address);
-			}
-		}
-	}
-	return addresses[0]
+	return	Object.values(interfaces)
+			.map(x=>Object.values(x))
+			.reduce((arr,x)=>arr.concat(x),[])//flatten
+			.filter(({family,internal})=>family==='IPv4'&&!internal)
+			.map(({address})=>address)[0]
 }
 output.response=function(res,opts)
 {
