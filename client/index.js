@@ -1,5 +1,5 @@
 'use strict';
-import {chant} from '../js/chant/chant.mjs';
+import {chant} from '../node_modules/chant/chant.mjs';
 const
 state=chant(),
 input={},
