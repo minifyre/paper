@@ -4,7 +4,16 @@ fs=require('fs'),
 os=require('os'),
 {config,logic,util}=require('./logic.js'),
 output={}
-output.file=filePath=>util.callback2promise(fs.readFile,filePath)
+output.dir=path=>util.callback2promise(fs.readdir,path)
+output.file=path=>util.callback2promise(fs.readFile,path)
+output.index=async function(path)
+{
+	const arr=await output.dir(path.replace(/index\.html$/,''))
+	return `<ul>${arr
+	.sort()
+	.map(file=>`<li><a href="${file}">${file}</a></li>`)
+	.join('')}</ul>`
+}
 output.ip=function(interfaces=os.networkInterfaces())
 {
 	return	Object.values(interfaces)

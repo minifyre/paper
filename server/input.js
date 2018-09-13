@@ -2,8 +2,9 @@
 const
 http=require('http'),
 chant=require('../node_modules/chant/chant.server.js'),
-input={},
-{config,logic,output,util}=require('./output.js')
+
+{config,logic,output,util}=require('./output.js'),
+input={}
 input.httpRequest=function({url},res)
 {
 	const
@@ -21,11 +22,15 @@ input.httpRequest=function({url},res)
 		const last=path.lastIndexOf('node_modules')
 		return output.file('..'+path.slice(last!==-1?last-1:0))
 	})
-	.catch(function(err)
+	.catch(async function({code,path})
 	{
-		console.log(err)
-		return	err.code=='ENOENT'?Promise.resolve('Error: 404'):
-				Promise.reject('Error: '+err.code)
+		const noEntry=code==='ENOENT'
+		if (noEntry&&path.match(/index\.html$/))
+		{
+			const file=await output.index(path)
+			return Promise.resolve(file)
+		}
+		return Promise.resolve(`Error: ${noEntry?404:code}`)
 	})
 	.then(data=>output.response(res,{data,type}))
 	.catch(fail)
