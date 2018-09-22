@@ -1,10 +1,11 @@
 import code from './node_modules/code-editor/code.mjs'
-import tabbed from './node_modules/tabbed-editor/tabbed.mjs'
+import tabbed from './node_modules/tabbed-editor/index.mjs'
 import truth from './node_modules/truth/truth.mjs'
+import youtube from './node_modules/youtube-viewer/index.mjs'
 const apps={code,tabbed}
 onload=async function()
 {
-	await Promise.all([code,tabbed].map(fn=>fn()))//init custom-els
+	await Promise.all([code,tabbed,youtube].map(fn=>fn()))//init custom-els
 	const
 	read=
 	{
