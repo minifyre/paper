@@ -18,10 +18,20 @@
 		position:relative;
 		width:100%;
 	}
+	.pane
+	{
+		display:flex;
+		float:left;
+		height:50%;
+		margin:0;
+		padding:0;
+		width:50%;
+	}
 </style>
-<tabbed-editor>
+<tabbed-editor class=pane>
 	<code-editor></code-editor>
 </tabbed-editor>
+<iframe class=pane></iframe>
 <script type=module>
 	import code from '../../node_modules/code-editor/code.mjs'
 	import tabbed from '../../node_modules/tabbed-editor/tabbed.mjs'
@@ -30,18 +40,28 @@
 	onload=async function()
 	{
         await Promise.all([code,tabbed].map(fn=>fn()))//init custom-els
-// 		const state=truth(
-// 		{
-// 			files:{},
-// //panes:{window:apps.pane.logic({id:'window'})},
-// 			tabs:{}
-// 		}),
-		//@todo !!proxy[undefinedKey] returns true... fix this
-		const state=
+		const
+		read=
 		{
 			files:{},
+//panes:{window:apps.pane.logic({id:'window'})},
 			tabs:{}
 		},
+		browser=document.querySelector('iframe.pane'),
+		renderView=function({type,path,val})
+		{
+			if(type==='get') return			
+			if(path.slice(-1)[0]==='value') renderBrowser(browser,truth.ref(read,path))
+		},
+		renderBrowser=function({contentWindow},txt)
+		{
+			const doc=contentWindow.document
+			doc.open('text/html')
+			doc.write(txt)
+			doc.close()
+		},
+		//@todo +pre op to set target=el or server that the change came from
+		state=truth(read,renderView),
 		tabs=document.querySelector('tabbed-editor'),
 		text=document.querySelector('code-editor')
 		tabs.addEventListener('tab',function({detail,target})
