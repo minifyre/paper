@@ -1,97 +1,104 @@
-import code from './node_modules/code-editor/code.mjs'
+import code from './node_modules/code-editor/index.mjs'
+import iframe from './node_modules/iframe-viewer/index.mjs'
+import pixel from './node_modules/pixel-editor/index.mjs'
 import tabbed from './node_modules/tabbed-editor/index.mjs'
 import truth from './node_modules/truth/truth.mjs'
+import pane from './node_modules/pane-viewer/index.mjs'
+import v from './node_modules/v/v.mjs'
 import youtube from './node_modules/youtube-viewer/index.mjs'
-const apps={code,tabbed}
+//@todo dynamically load all editors in node_modules
+const
+apps={code,iframe,pixel,tabbed,youtube},
+{util}=pane
+
+util.mkView=(...opts)=>util.mk({file:null,x:0,y:0,height:100,width:100},...opts)
+
+
 onload=async function()
 {
-	// const {error,value}=await fetch('./node_modules/')
-	// .then(x=>x.text())
-	// .then(value=>({value}))
-	// .catch(error=>{error})
-	// if(error) return console.error(error)
-// 	<tabbed-editor class=pane>
-// 	<code-editor></code-editor>
-// </tabbed-editor>
-// <iframe class=pane></iframe>
-// <youtube-player class=pane></youtube-player>
-	await Promise.all([code,tabbed,youtube].map(fn=>fn()))//init custom-els
+	await Promise.all(Object.values(apps).map(fn=>fn()))//init custom-els
+	let renderer=x=>x
+	//@todo get data from the server
 	const
-	read=
+	read={files:{},views:{}},
+	//get default views
+	[txt,browser,pic,vid]=	'code,iframe,pixel,youtube'
+							.split(',')
+							.map(app=>apps[app].logic());
+	//sepearate views & files
+	[txt,pic,vid]
+	.forEach(function(view)
 	{
-		files:{},
-		panes:{},
-		tabs:{}
-	},
-	// [browser,tabs,text]=['iframe.pane','tabbed-editor','code-editor']
-	// 					.map(x=>document.querySelector(x)),
-	renderView=function({type,path,val})
-	{
-		if(type==='get') return			
-		if(path.slice(-1)[0]==='value') renderBrowser(browser,truth.ref(read,path))
-	},
-	renderBrowser=function({contentWindow},txt)
-	{
-		const doc=contentWindow.document
-		doc.open('text/html')
-		doc.write(txt)
-		doc.close()
-	},
-	//@todo +pre op to set target=el or server that the change came from
-	state=truth(read,renderView)
-	if(!Object.keys(state.panes).length)
-	{
-		const
-		//@todo add tabs to panes
-		pane={height:50,id:'sub-pane',type:'app-viewer',width:50,x:0,y:0},
-		mkPane=x=>Object.assign({},pane,x)
-		Object.assign(state.panes,
-		{
-			code:mkPane({id:'code',tabs:[{id:'code',name:'index.html'}],type:'code-editor'}),
-			iframe:mkPane({id:'iframe',tabs:[{id:'code',name:'index.html'}],type:'iframe-viewer'}),
-			youtube:mkPane({id:'youtube',tabs:[{id:'vide',name:'video'}],type:'youtube-viewer'}),
-			pixel:mkPane({id:'pixel',tabs:[{id:'pic',name:'pic.png'}],type:'pixel-editor'})
-		})
-	}
-	Object.values(state.panes)
-	.forEach(function(pane)
-	{
-		const
-		tabs=Object.assign(new tabbed.editor(pane),{className:'pane'}),
-		child=document.createElement(pane.type)
-		tabs.append(child)
-		document.body.append(tabs)
+		const {id}=view
+
+		read.files[id]=Object.assign(view.file,{id})
+		read.views[id]=Object.assign(view,{file:id})
 	})
-	//@todo get code from server
-	//@todo if files & tabs are empty, set default files
-	// if(!state.files.code)
-	// {
-	// 	//@todo make file creator function
-	// 	state.files.code={id:'code',path:'',value:'<!Doctype html>\n<h1>Hello!</h1>'}
-		
-	// }
-	//@tod load tabs with tabs in state
-	// tabs.addEventListener('tab',function({detail,target})
-	// {
-	// 	const
-	// 	{close,open}=detail,
-	// 	child=target.querySelector(':scope>*')
-	// 	if(close)
-	// 	{
-	// 		delete state.files[close]//@todo preserve if file has a value
-	// 		delete state.tabs[close]
-	// 	}
-	// 	if(open)
-	// 	{
-	// 		if(!state.files[open])
-	// 		{
-	// 			state.files[open]={id:open,value:''}
-	// 			//@todo get default view from child (sans value)
-	// 			state.tabs[open]={id:open,view:{}}
-	// 		}
-	// 		const [{value},view]=['files','tabs'].map(x=>state[x][open])
-	// 		child.state=Object.assign({},{value},view)
-	// 	}
-	// })
-	// text.addEventListener('input',({target})=>state.files[tabs.tab].value=target.value)
+	browser.file=txt.id//link browser view to txt file
+	//create a unique view for this device
+
+	document.body.innerHTML+='<tabbed-editor>'
+	
+	//state=truth(read,(...args)=>renderer(...args))//@todo only sync public data via chant on preop?
+	//renderer=v.render(document.body,state,output)
+
+
+	//@todo preop=send data to server & postop= update other panes/files (but not the originator)
+	// if(!Object.values(views).length) setupPanes(state)
+	// //else @todo open new tab on window
+	//console.log(read)
 }
+// const input={}
+
+// input.tab=function({detail:{close,open},target})
+// {
+// 	if(open)//@todo move into logic
+// 	{
+// 		state.views[target.id].file=detail.open
+// 		if(!state.views[open])
+// 		{
+// 			const
+// 			[app]=target.childNodes[0].nodeName.split('-'),
+// 			view=apps[app].logic(),
+// 			{id}=tmp
+
+// 			state.files[id]=Object.assign(tmp.file,{id})
+// 			view.file=id
+
+// 			state.views[id]=view
+// 		}
+
+// 		const
+// 		view=state.views[open],
+// 		file=state.files[view.file]
+// 		editor.load(Object.assign({},view,{file}))
+// 	}
+
+// 	if(close)
+// 	{
+// 		//@todo check if file is referenced by other tabs
+// 			//if not, check if it is empty by comparing to app.logic()'s value via strinigfy equality 
+// 	}
+// }
+
+// function output(state)
+// {
+// 	return Object.keys(state.files[state.views.window.file])
+// 	.map(id=>state.views[id])
+// 	.map(function({file,id,type})
+// 	{
+// 		const on=
+// 		{
+// 			render:function({detail,target})
+// 			{
+// 				const
+// 				view=target.id,state.views[target.id]
+// 				//target.childNodes[0].load()
+// 			},
+// 			tab:input.tab
+// 		}
+// 		return v('tabbed-editor',{class:'pane',data:{file},id,on},
+// 			v(type)
+// 		)
+// 	})
+// }
