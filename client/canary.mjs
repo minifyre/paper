@@ -5,7 +5,7 @@ import tabbed from './node_modules/tabbed-editor/index.mjs'
 import truth from './node_modules/truth/truth.mjs'
 import pane from './node_modules/pane-viewer/index.mjs'
 import v from './node_modules/v/v.mjs'
-import youtube from './node_modules/youtube-viewer/index.mjs'
+import youtube from './node_modules/youtube-player/index.mjs'
 //@todo dynamically load all editors in node_modules
 const
 apps={code,iframe,pixel,tabbed,youtube},
@@ -35,6 +35,7 @@ onload=async function()
 		read.views[id]=Object.assign(view,{file:id})
 	});
 	browser.file=txt.id//link browser view to txt file
+	read.views[browser.id]=browser
 	//create a unique view for this device
 
 	//setup tabbed-panes
