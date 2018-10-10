@@ -34,6 +34,7 @@ onload=async function()
 		read.files[id]=Object.assign(view.file,{id})
 		read.views[id]=Object.assign(view,{file:id})
 	});
+	read.files[txt.id].value='Hello world!'
 	browser.file=txt.id//link browser view to txt file
 	read.views[browser.id]=browser
 	//create a unique view for this device
@@ -84,6 +85,7 @@ logic.getLoadableView=function({files,views},viewId)
 	const
 	view=views[viewId],
 	file=files[view.file]
+	//@todo this should a proxy through and through, not just file and sub props
 	return Object.assign({},view,{file})
 }
 
@@ -98,7 +100,8 @@ function output(state)
 			const
 			tabbedView=views[target.id],
 			childView=logic.getLoadableView(state,tabbedView.tab)
-			//target.childNodes[0].load()
+
+			target.childNodes[0].load(childView)
 		},
 		tab:input.tab
 	}
