@@ -42,12 +42,15 @@ onload=async function()
 	const panes=[txt,browser,pic,vid]
 	.map(({id})=>tabbed.logic({tab:id,tabs:[{id,name:'untitled'}]}))
 	read.views.window=util.mk({id:'window',panes})
+	panes.forEach(pane=>read.views[pane.id]=pane)
 	//setup state
 	const state=truth(read,(...args)=>renderer(...args))//@todo only sync public data via chant on preop?
 	renderer=v.render(document.body,state,output)
 	//@todo preop=send data to server & postop= update other panes/files (but not the originator)
 }
-const input={}
+const
+input={},
+logic={}
 
 input.tab=function({detail:{close,open},target})
 {
@@ -66,11 +69,7 @@ input.tab=function({detail:{close,open},target})
 
 			state.views[id]=view
 		}
-
-		const
-		view=state.views[open],
-		file=state.files[view.file]
-		editor.load(Object.assign({},view,{file}))
+		editor.load(logic.getLoadableView(state,open))
 	}
 
 	if(close)
@@ -80,14 +79,25 @@ input.tab=function({detail:{close,open},target})
 	}
 }
 
-function output({files,views})
+logic.getLoadableView=function({files,views},viewId)
 {
-	const on=
+	const
+	view=views[viewId],
+	file=files[view.file]
+	return Object.assign({},view,{file})
+}
+
+function output(state)
+{
+	const
+	{files,views}=state,
+	on=
 	{
 		render:function({detail,target})
 		{
-			const view=views[target.id]
-			console.log(views)
+			const
+			tabbedView=views[target.id],
+			childView=logic.getLoadableView(state,tabbedView.tab)
 			//target.childNodes[0].load()
 		},
 		tab:input.tab
