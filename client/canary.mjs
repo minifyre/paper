@@ -80,29 +80,24 @@ input.tab=function({detail:{close,open},target})
 	}
 }
 
-function output(state)
+function output({files,views})
 {
-	return Object.values(state.views.window.panes)
+	const on=
+	{
+		render:function({detail,target})
+		{
+			const view=views[target.id]
+			console.log(views)
+			//target.childNodes[0].load()
+		},
+		tab:input.tab
+	}
+	return Object.values(views.window.panes)
 	.map(function({id,tab,fullscreen,type})
 	{
-		return v(type,{class:'pane'})
+		const view=views[tab]
+		return v(type,{class:'pane',data:{file:view.file},id,on},
+			v(view.type)
+		)
 	})
-	// return Object.keys(state.files[state.views.window.file])
-	// .map(id=>state.views[id])
-	// .map(function({file,id,type})
-	// {
-	// 	const on=
-	// 	{
-	// 		render:function({detail,target})
-	// 		{
-	// 			const
-	// 			view=target.id,state.views[target.id]
-	// 			//target.childNodes[0].load()
-	// 		},
-	// 		tab:input.tab
-	// 	}
-	// 	return v('tabbed-editor',{class:'pane',data:{file},id,on},
-	// 		v(type)
-	// 	)
-	// })
 }
