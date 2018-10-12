@@ -11,6 +11,13 @@ const
 apps={code,iframe,pixel,tabbed,youtube},
 {util}=pane
 
+
+util.counter=function()
+{
+	if(!util.counter.count) util.counter.count=0
+	return util.counter.count+=1
+}
+
 onload=async function()
 {
 	await Promise.all(Object.values(apps).map(fn=>fn()))//init custom-els
@@ -23,17 +30,22 @@ onload=async function()
 	//get default views,
 	views=	'code,iframe,pixel,youtube'
 			.split(',')
-			.map(app=>apps[app].logic()),
+			.map(app=>apps[app].logic({id:util.counter()})),
 	[txt,browser,pic,vid]=views;
 	//sepearate views & files
 	[txt,pic,vid]
 	.forEach(function(view)
 	{
 		const {id}=view
-
+		console.log(id)
 		read.files[id]=Object.assign(view.file,{id})
 		read.views[id]=Object.assign(view,{file:id})
 	});
+	//@todo fix this bug (check that txt file is not stored under a key that differs from its id)
+
+	
+	
+	
 	read.files[txt.id].value='Hello world!'
 	browser.file=txt.id//link browser view to txt file
 	read.views[browser.id]=browser
@@ -48,6 +60,9 @@ onload=async function()
 	const state=truth(read,(...args)=>renderer(...args))//@todo only sync public data via chant on preop?
 	renderer=v.render(document.body,state,output)
 	//@todo preop=send data to server & postop= update other panes/files (but not the originator)
+
+	//debug
+	window.state=state
 }
 const
 input={},
@@ -57,14 +72,13 @@ input.tab=function({detail:{close,open},target})
 {
 	if(open)//@todo move into logic
 	{
-		state.views[target.id].file=detail.open
+		state.views[target.getAttribute('data-view')].file=detail.open
 		if(!state.views[open])
 		{
 			const
 			[app]=target.childNodes[0].nodeName.split('-'),
 			view=apps[app].logic(),
 			{id}=tmp
-
 			state.files[id]=Object.assign(tmp.file,{id})
 			view.file=id
 
@@ -80,13 +94,28 @@ input.tab=function({detail:{close,open},target})
 	}
 }
 
-logic.getLoadableView=function({files,views},viewId)
+logic.getLoadableView=function(state,viewId)
 {
 	const
-	view=views[viewId],
-	file=files[view.file]
-	//@todo this should a proxy through and through, not just file and sub props
-	return Object.assign({},view,{file})
+	view=state.views[viewId],
+	file=state.files[view.file]
+	return truth(Object.assign({},view,{file}),
+	function({path,type,val})
+	{
+		let obj=view
+		if(path[0]==='file') [obj,path]=[file,path.slice(1)]
+		//@todo maybe this only needed for non-file (or non-nested props)
+		truth.inject(obj,{path,type,val})
+
+		//@todo ELIMINATE THIS TEMP BUG FIX & FIX THE UNDERLYING PROBLEM
+		const id=file.id===2?1:file.id
+
+		;[...document.querySelectorAll(`[data-file="${id}"]`)]
+		.filter(el=>el.state.id!==viewId)
+		.map(el=>el.render)
+		.filter(fn=>!!fn)//@todo eliminate this when all editors have a render fn & use console.error as default render fn
+		.forEach(render=>render())
+	})
 }
 
 function output(state)
@@ -97,11 +126,8 @@ function output(state)
 	{
 		render:function({detail,target})
 		{
-			const
-			tabbedView=views[target.id],
-			childView=logic.getLoadableView(state,tabbedView.tab)
-
-			target.childNodes[0].load(childView)
+			const tabbedView=views[target.getAttribute('data-view')]
+			target.childNodes[0].load(logic.getLoadableView(state,tabbedView.tab))
 		},
 		tab:input.tab
 	}
@@ -109,8 +135,8 @@ function output(state)
 	.map(function({id,tab,fullscreen,type})
 	{
 		const view=views[tab]
-		return v(type,{class:'pane',data:{file:view.file},id,on},
-			v(view.type)
+		return v(type,{class:'pane',data:{view:id},on},
+			v(view.type,{data:{file:view.file}})
 		)
 	})
 }
