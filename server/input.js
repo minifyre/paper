@@ -2,9 +2,11 @@
 const
 http=require('http'),
 chant=require('../node_modules/chant/chant.server.js'),
+silo=require('./output.js'),
 
-{config,logic,output,util}=require('./output.js'),
+{config,logic,output,util}=silo,
 input={}
+
 input.httpRequest=function({url},res)
 {
 	const
@@ -67,4 +69,4 @@ input.init=function(opts={})
 	})
 	console.log('Running at http://'+ip+':'+port+'/')
 }
-module.exports={config,input,logic,output,util}
+module.exports=Object.assign(silo,{input})
