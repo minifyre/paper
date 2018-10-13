@@ -13,12 +13,10 @@ input.httpRequest=function({url},res)
 	path=	url.match(/\/$/)?url+'index.html':
 			!(url.split('/')||['']).pop().match(/\./)?url+'/index.html':
 			url,
-	ext=logic.ext(path),
-	type=config.mimeTypes[ext],
-	fail=data=>output.response(res,{code:500,data,type:'text/plain'})
+	type=config.mimeTypes[logic.ext(path)]
+
 	//@todo make sure files above paper directory cannot be served up
-	return path.match(/^\/server/)?fail()://disallow sending server files
-	output.file('../client'+path)
+	return (path.match(/^\/server/)?Promise.resolve('Access Denied'):output.file('../client'+path))
 	.catch(function()//attempt to serve node modules from root dir of modules
 	{//avoids needing to install duplicates of modules in lower dirs
 		const last=path.lastIndexOf('node_modules')
@@ -35,7 +33,7 @@ input.httpRequest=function({url},res)
 		return Promise.resolve(`Error: ${noEntry?404:code}`)
 	})
 	.then(data=>output.response(res,{data,type}))
-	.catch(fail)
+	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
 }
 input.init=function(opts={})
 {
