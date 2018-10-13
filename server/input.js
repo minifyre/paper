@@ -25,12 +25,10 @@ input.httpRequest=function({url},res)
 	.catch(async function({code,path})
 	{
 		const noEntry=code==='ENOENT'
-		if (noEntry&&path.match(/index\.html$/))
-		{
-			const file=await output.index(path)
-			return Promise.resolve(file)
-		}
-		return Promise.resolve(`Error: ${noEntry?404:code}`)
+
+		return	noEntry&&path.match(/index\.html$/)?
+				await await output.index(path):
+				`Error: ${noEntry?404:code}`
 	})
 	.then(data=>output.response(res,{data,type}))
 	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
