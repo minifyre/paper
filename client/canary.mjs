@@ -57,7 +57,7 @@ onload=async function()
 	read.views.window=util.mk({id:'window',panes})
 	panes.forEach(pane=>read.views[pane.id]=pane)
 	//setup state
-	const state=truth(read,(...args)=>renderer(...args))//@todo only sync public data via chant on preop?
+	const {state}=truth(read,(...args)=>renderer(...args))//@todo only sync public data via chant on preop?
 	renderer=v.render(document.body,state,output)
 	//@todo preop=send data to server & postop= update other panes/files (but not the originator)
 
@@ -72,14 +72,14 @@ input.tab=function({detail:{close,open},target})
 {
 	if(open)//@todo move into logic
 	{
-		state.views[target.getAttribute('data-view')].file=detail.open
+		state.views[target.getAttribute('data-view')].file=open
 		if(!state.views[open])
 		{
 			const
-			[app]=target.childNodes[0].nodeName.split('-'),
+			app=target.childNodes[0].nodeName.split('-')[0].toLowerCase(),
 			view=apps[app].logic(),
-			{id}=tmp
-			state.files[id]=Object.assign(tmp.file,{id})
+			{id}=view
+			state.files[id]=Object.assign(view.file,{id})
 			view.file=id
 
 			state.views[id]=view
@@ -115,7 +115,7 @@ logic.getLoadableView=function(state,viewId)
 		.map(el=>el.render)
 		.filter(fn=>!!fn)//@todo eliminate this when all editors have a render fn & use console.error as default render fn
 		.forEach(render=>render())
-	})
+	}).state
 }
 
 function output(state)
