@@ -1,6 +1,4 @@
 import http from 'http'
-import chant from '../node_modules/chant/chant.server.js'
-import truth from '../node_modules/truth/truth.mjs'
 import silo from './output.mjs'
 
 const
@@ -44,26 +42,5 @@ output.mkStaticFileServer=function(opts)
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
 	console.log(`File Server running at ${protocol}://${ip}:${port}/`)
 	return server
-}
-
-
-
-input.init=async function(opts={})
-{
-	const
-	//truth=await import('../node_modules/truth/truth.mjs'),
-	server=output.mkStaticFileServer(opts)
-	//@todo public & private defaults (only sync public data with server)
-	//tmp=console.log(truth),
-	//{pre,post,state,update}=truth(util.clone(config.state))
-	//websocket server
-
-
-
-	process.on('uncaughtException',function(err)//@todo eliminate if not debug
-	{
-		console.error(err)
-		console.log("Node NOT Exiting...")
-	})
 }
 export default Object.assign(silo,{input})
