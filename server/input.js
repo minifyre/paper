@@ -15,7 +15,7 @@ input.httpRequest=function({url},res)
 			url,
 	type=config.mimeTypes[logic.ext(path)]
 
-	//@todo make sure files above paper directory cannot be served up
+	//@todo make sure files above paper directory cannot be served up & pass an error code
 	return (path.match(/^\/server/)?Promise.resolve('Access Denied'):output.file('../client'+path))
 	.catch(function()//attempt to serve node modules from root dir of modules
 	{//avoids needing to install duplicates of modules in lower dirs
@@ -33,9 +33,10 @@ input.httpRequest=function({url},res)
 	.then(data=>output.response(res,{data,type}))
 	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
 }
-input.init=function(opts={})
+input.init=async function(opts={})
 {
 	const
+	truth=await import('../node_modules/truth/truth.mjs'),
 	ip=output.ip(),
 	{port}=Object.assign({},config.server,opts),
 	server=http.createServer(input.httpRequest).listen(port)//static http server
