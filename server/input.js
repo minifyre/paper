@@ -33,13 +33,26 @@ input.httpRequest=function({url},res)
 	.then(data=>output.response(res,{data,type}))
 	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
 }
+//@todo move to output
+output.mkStaticFileServer=function(opts)
+{
+	const
+	ip=output.ip(),
+	protocol='http',//@todo add/allow https
+	{port}=Object.assign({},config.server,opts),
+	server=http.createServer(input.httpRequest).listen(port)//static http server
+	//@todo if(err.code==='EADDRINUSE')//port is currently in use
+	console.log(`File Server running at ${protocol}://${ip}:${port}/`)
+	return server
+}
+
+
+
 input.init=async function(opts={})
 {
 	const
 	truth=await import('../node_modules/truth/truth.mjs'),
-	ip=output.ip(),
-	{port}=Object.assign({},config.server,opts),
-	server=http.createServer(input.httpRequest).listen(port)//static http server
+	server=output.mkStaticFileServer(opts)
 	//@todo public & private defaults (only sync public data with server)
 	var state
 	//websocket server
@@ -55,15 +68,11 @@ input.init=async function(opts={})
 			})
 		}
 	})
-//	if (err.code==='EADDRINUSE')
-//	{
-//		// port is currently in use
-//	}
+
 	process.on('uncaughtException',function(err)
 	{
 		console.error(err)
 		console.log("Node NOT Exiting...")
 	})
-	console.log('Running at http://'+ip+':'+port+'/')
 }
 module.exports=Object.assign(silo,{input})
