@@ -1,8 +1,8 @@
 'use strict'
 const
-silo=require('./config.js'),
-{config}=silo,
-{util}=require('./util.js'),
+silo=require('./util.js'),
+{config,util}=silo,
 logic={}
+
 logic.ext=x=>(x.split('.')||['']).pop().toLowerCase()
 module.exports={config,logic,util}
