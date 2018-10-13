@@ -1,8 +1,8 @@
-'use strict'
+import fs from 'fs'
+import os from 'os'
+import silo from './logic.mjs'
+
 const
-fs=require('fs'),
-os=require('os'),
-silo=require('./logic.js'),
 {config,logic,util}=silo,
 output={}
 
@@ -34,4 +34,5 @@ output.response=function(res,opts)
 	res.writeHead(code,{'Content-Type':type})
 	res.end(data,encoding)
 }
-module.exports=Object.assign(silo,{output})
+
+export default Object.assign(silo,{output})

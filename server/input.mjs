@@ -1,9 +1,9 @@
-'use strict'
-const
-http=require('http'),
-chant=require('../node_modules/chant/chant.server.js'),
-silo=require('./output.js'),
+import http from 'http'
+import chant from '../node_modules/chant/chant.server.js'
+import truth from '../node_modules/truth/truth.mjs'
+import silo from './output.mjs'
 
+const
 {config,logic,output,util}=silo,
 input={}
 
@@ -66,4 +66,4 @@ input.init=async function(opts={})
 		console.log("Node NOT Exiting...")
 	})
 }
-module.exports=Object.assign(silo,{input})
+export default Object.assign(silo,{input})
