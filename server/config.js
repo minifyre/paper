@@ -1,5 +1,7 @@
 'use strict'
-const config={}
+const
+silo=module.exports={config:{}},
+{config}=silo
 config.mimeTypes=
 {
 	//web
@@ -35,4 +37,3 @@ config.response=
 }
 config.server={port:8080}
 config.state={files:{},views:{}}
-module.exports={config}
