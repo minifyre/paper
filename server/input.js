@@ -51,25 +51,16 @@ output.mkStaticFileServer=function(opts)
 input.init=async function(opts={})
 {
 	const
-	truth=await import('../node_modules/truth/truth.mjs'),
+	//truth=await import('../node_modules/truth/truth.mjs'),
 	server=output.mkStaticFileServer(opts)
 	//@todo public & private defaults (only sync public data with server)
-	var state
+	//tmp=console.log(truth),
+	//{pre,post,state,update}=truth(util.clone(config.state))
 	//websocket server
-	chant(server,util.clone(config.state))
-	.then(function(self)
-	{
-		state=self
-		state.auth=function(req)
-		{
-			return new Promise(function(pass,fail)
-			{
-				pass()
-			})
-		}
-	})
 
-	process.on('uncaughtException',function(err)
+
+
+	process.on('uncaughtException',function(err)//@todo eliminate if not debug
 	{
 		console.error(err)
 		console.log("Node NOT Exiting...")
