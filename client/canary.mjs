@@ -100,12 +100,12 @@ logic.getLoadableView=function(state,viewId)
 	view=state.views[viewId],
 	file=state.files[view.file]
 	return truth(Object.assign({},view,{file}),
-	function({path,type,val})
+	function({path,type,value})
 	{
 		let obj=view
 		if(path[0]==='file') [obj,path]=[file,path.slice(1)]
 		//@todo maybe this only needed for non-file (or non-nested props)
-		truth.inject(obj,{path,type,val})
+		truth.inject(obj,{path,type,value})
 
 		//@todo ELIMINATE THIS TEMP BUG FIX & FIX THE UNDERLYING PROBLEM
 		const id=file.id===2?1:file.id
