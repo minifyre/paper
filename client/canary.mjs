@@ -1,3 +1,4 @@
+import chant from './node_modules/chant/index.mjs'
 import code from './node_modules/code-editor/index.mjs'
 import iframe from './node_modules/iframe-viewer/index.mjs'
 import pixel from './node_modules/pixel-editor/index.mjs'
@@ -21,7 +22,6 @@ util.counter=function()
 onload=async function()
 {
 	await Promise.all(Object.values(apps).map(fn=>fn()))//init custom-els
-	let renderer=x=>x
 	//@todo get data from the server
 	// if(!Object.values(views).length) setupPanes(state)
 	// //else @todo open new tab on window
@@ -57,8 +57,12 @@ onload=async function()
 	read.views.window=util.mk({id:'window',panes})
 	panes.forEach(pane=>read.views[pane.id]=pane)
 	//setup state
-	const {state}=truth(read,(...args)=>renderer(...args))//@todo only sync public data via chant on preop?
-	renderer=v.render(document.body,state,output)
+	const {state,post,update}=truth(read)
+	//@todo only sync public data via chant on preop?
+	
+	
+	const serverSync=await chant(update)
+	post.push(serverSync,v.render(document.body,state,output))
 	//@todo preop=send data to server & postop= update other panes/files (but not the originator)
 
 	//debug
