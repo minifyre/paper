@@ -23,6 +23,13 @@ onload=async function()
 {
 	//init custom-els
 	await Promise.all(Object.values(apps).map(fn=>fn()))
+
+	const
+	editor=document.querySelector('code-editor'),
+	viewer=document.querySelector('iframe-viewer')
+	
+	editor
+	.addEventListener('input',({target})=>viewer.state.file.value=target.state.file.value)
 }
 // 	const {state:initial,send}=await chant()
 // 	//setup state
