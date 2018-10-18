@@ -1,5 +1,9 @@
-'use strict'
-const util={}
+import silo from './config.mjs'
+
+const
+{config}=silo,
+util={}
+
 util.callback2promise=function(func,...args)
 {
 	return new Promise(function(res,rej)
@@ -8,4 +12,5 @@ util.callback2promise=function(func,...args)
 	})
 }
 util.clone=json=>JSON.parse(JSON.stringify(json))
-module.exports={util}
+
+export default Object.assign(silo,{util})

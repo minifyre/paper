@@ -1,4 +1,3 @@
-'use strict'
 const config={}
 config.mimeTypes=
 {
@@ -33,29 +32,6 @@ config.response=
 	encoding:'utf-8',
 	type:'application/octet-stream'
 }
-config.server=
-{
-	port:8080
-}
-//@todo remove hardcoded users & import them from a different source
-//also, don't pass the pwd hash property onto users
-config.state=//default
-{
-	public:
-	{
-		files:{},
-		tabs:{},
-		panes:{},
-		devices:{},
-		users:
-		{
-			'e9ee8d17-9262-4750-9283-9766de0870de':
-			{
-				id:'e9ee8d17-9262-4750-9283-9766de0870de',
-				name:'user',
-				pwd:'add-ecrypted-hash-here'
-			}
-		}
-	}
-}
-module.exports=config
+config.server={port:8080}
+config.state={files:{},views:{}}
+export default {config}
