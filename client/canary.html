@@ -1,0 +1,39 @@
+<!Doctype html>
+<title>Demo</title>
+<meta charset=utf-8>
+<meta name=mobile-web-app-capable content=yes>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<style>
+	*
+	{
+		box-sizing:border-box;
+	}
+	html,
+	body,
+	main
+	{
+		font-family:Arial, Helvetica, sans-serif;
+		height:100%;
+		margin:0;
+		padding:0;
+		position:relative;
+		width:100%;
+	}
+	.pane
+	{
+		display:flex;
+		float:left;
+		height:50%;
+		margin:0;
+		padding:0;
+		width:50%;
+	}
+	[fullscreen="true"]
+	{
+		height:100%;
+		position:fixed;
+		width:100%;
+		z-index:1;
+	}
+</style>
+<script type=module src=canary.mjs></script>

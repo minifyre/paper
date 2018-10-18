@@ -6,7 +6,10 @@
 	"version": "0.5.0",
 	"dependencies": {
 		"chant": "minifyre/chant",
+		"code-editor": "minifyre/code-editor",
 		"pane": "minifyre/pane",
+		"tabbed-editor": "minifyre/tabbed-editor",
+		"truth": "minifyre/truth",
 		"qwick": "minifyre/qwick"
 	},
 	"devDependencies": {

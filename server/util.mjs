@@ -1,0 +1,16 @@
+import silo from './config.mjs'
+
+const
+{config}=silo,
+util={}
+
+util.callback2promise=function(func,...args)
+{
+	return new Promise(function(res,rej)
+	{
+		func(...args,(err,data)=>err?rej(err):res(data))
+	})
+}
+util.clone=json=>JSON.parse(JSON.stringify(json))
+
+export default Object.assign(silo,{util})
