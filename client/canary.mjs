@@ -25,12 +25,19 @@ onload=async function()
 	await Promise.all(Object.values(apps).map(fn=>fn()))
 	const {state:initial,send}=await chant()
 	//setup state
-	const {pre,post,state,update}=truth(initial)
-	post.push(send(update))
+	const {state}=truth
+	(
+		initial,
+		truth.compile(({update})=>send(update)),
+		truth.compile(({state})=>v.render(document.body,state,output))
+	)
 
-	// if(!Object.values(views).length) setupPanes(state)
-	// //else @todo open new tab on window
+	console.log(state)
 
+	//if(!Object.values(state.views).length) tabbed.logic({id:'window'})
+	//else @todo open new tab on window
+
+	console.log(tabbed.logic({id:'window'}))
 
 	const
 	//get default views,
@@ -61,10 +68,7 @@ onload=async function()
 	.map(({id})=>tabbed.logic({tab:id,tabs:[{id,name:'untitled'}]}))
 	state.views.window=util.mk({id:'window',panes})
 	panes.forEach(pane=>state.views[pane.id]=pane)
-	// //setup state
-	post.push(v.render(document.body,state,output))
-	// //debug
-	// window.state=state
+
 }
 const
 input={},
@@ -96,12 +100,24 @@ input.tab=function({detail:{close,open},target})
 	}
 }
 
+util.link=function(a,toB,byProp)//@link objects together by property
+{
+	return new Proxy({},//@todo add keys trap
+	{
+		deleteProperty:(_,prop)=>delete a[prop],
+		get:(_,prop)=>prop===byProp?toB:a,
+		set:(_,prop,val)=>a[prop]=val
+	})
+}
+
 logic.getLoadableView=function(state,viewId)
 {
 	// const
 	// view=state.views[viewId],
-	// file=state.files[view.file],
-	// {state:refLink,update,post}=truth(Object.assign({},view,{file}))
+	// file=state.files[view.file]
+	// console.clear()
+	// console.log(JSON.parse(JSON.stringify(util.link(view,file,'file'))))
+	// return util.link(view,file,'file')
 
 	// post.push(function({path,type,value})
 	// {
@@ -120,12 +136,11 @@ logic.getLoadableView=function(state,viewId)
 	// 	.forEach(render=>render())
 	// })
 
-	// return refLink	
 }
 
 function output(state)
 {
-	console.log(state)
+	if(!state.views||!state.views.window) return []
 	const
 	{files,views}=state,
 	on=
@@ -133,6 +148,11 @@ function output(state)
 		render:function({detail,target})
 		{
 			const tabbedView=views[target.getAttribute('data-view')]
+			// if(!tabbedView)//@todo fix bug on youtube renderer
+			// {
+			// 	console.clear()
+			// 	console.log(target,JSON.parse(JSON.stringify(views)))
+			// }
 			target.childNodes[0].load(logic.getLoadableView(state,tabbedView.tab))
 		},
 		tab:input.tab
