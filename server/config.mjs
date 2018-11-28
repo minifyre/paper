@@ -23,7 +23,10 @@ config.mimeTypes=
 	eot:'application/vnd.ms-fontobject',
 	otf:'application/font-otf',
 	//vector images
-	svg:'image/svg+xml'
+	svg:'image/svg+xml',
+	//zip
+	zip:'application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip'
+
 }
 config.response=
 {
