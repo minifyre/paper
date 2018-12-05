@@ -1,3 +1,4 @@
+import compile from '../node_modules/silo/compiler.mjs'
 import fs from 'fs'
 import os from 'os'
 import silo from './logic.mjs'
@@ -33,6 +34,19 @@ output.response=function(res,opts)
 	const {code,data,encoding,type}=Object.assign({},config.response,opts)
 	res.writeHead(code,{'Content-Type':type})
 	res.end(data,encoding)
+}
+
+output.siloCompilation=async function(path)
+{
+	const dirs=path.split(/\\|\//)
+
+	dirs.pop()//remove index.js
+
+	const
+	src='../'+dirs.slice(dirs.indexOf('paper')+1).join('/')+'/src/',
+	data=await compile(src)
+
+	return Buffer.from(data,'utf8')
 }
 
 export default Object.assign(silo,{output})

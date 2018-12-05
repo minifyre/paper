@@ -1,5 +1,6 @@
 import http from 'http'
 import silo from './output.mjs'
+import { fstat } from 'fs';
 
 const
 {config,logic,output,util}=silo,
@@ -24,8 +25,8 @@ input.httpRequest=function({url},res)
 	{
 		const noEntry=code==='ENOENT'
 
-		return	noEntry&&path.match(/index\.html$/)?
-				await await output.index(path):
+		return noEntry&&path.match(/index\.html$/)?await output.index(path):
+				noEntry&&path.match(/index\.js$/)?await output.siloCompilation(path):
 				`Error: ${noEntry?404:code}`
 	})
 	.then(data=>output.response(res,{data,type}))
