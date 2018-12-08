@@ -6,6 +6,7 @@
 	"version": "0.5.0",
 	"dependencies": {
 		"chant": "minifyre/chant",
+		"bcrypt": "bcrypt",
 		"code-editor": "minifyre/code-editor",
 		"pane": "minifyre/pane",
 		"tabbed-editor": "minifyre/tabbed-editor",
