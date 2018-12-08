@@ -1,3 +1,4 @@
+import http from 'http'
 import https from 'https'
 import fs from 'fs'
 import silo from './output.mjs'
@@ -37,7 +38,6 @@ output.mkStaticFileServer=function(opts)
 {
 	const
 	ip=output.ip(),
-	protocol='http',//@todo add/allow https
 	{port}=Object.assign({},config.server,opts),
 	certOpts=
 	{
@@ -46,7 +46,16 @@ output.mkStaticFileServer=function(opts)
 	},
 	server=https.createServer(certOpts,input.httpRequest).listen(port)//static http server
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
-	console.log(`File Server running at ${protocol}://${ip}:${port}/`)
+
+	//upgrade http to https
+	http.createServer(function(req,res)
+	{
+		res.writeHead(301,{'Location':'https://'+req.headers['host']+req.url})
+		res.end()
+	})
+	.listen(80)
+
+	console.log(`File Server running at https://${ip}/`)
 	return server
 }
 export default Object.assign(silo,{input})
