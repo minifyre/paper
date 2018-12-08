@@ -1,6 +1,6 @@
-import http from 'http'
+import https from 'https'
+import fs from 'fs'
 import silo from './output.mjs'
-import { fstat } from 'fs';
 
 const
 {config,logic,output,util}=silo,
@@ -39,7 +39,12 @@ output.mkStaticFileServer=function(opts)
 	ip=output.ip(),
 	protocol='http',//@todo add/allow https
 	{port}=Object.assign({},config.server,opts),
-	server=http.createServer(input.httpRequest).listen(port)//static http server
+	certOpts=
+	{
+		key:fs.readFileSync('./cert/server.key'),
+		cert:fs.readFileSync('./cert/server.crt')
+	},
+	server=https.createServer(certOpts,input.httpRequest).listen(port)//static http server
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
 	console.log(`File Server running at ${protocol}://${ip}:${port}/`)
 	return server
