@@ -6,4 +6,6 @@ const
 logic=opts=>Object.assign({},config.state,opts)
 logic.ext=x=>(x.split('.')||['']).pop().toLowerCase()
 
+logic.authPwdCheck=async (pwd,hash)=>await bcrypt.compare(pwd,hash)
+logic.authPwdHash=async (pwd,saltRounds=10)=>await bcrypt.hash(pwd,saltRounds)
 export default Object.assign(silo,{logic})
