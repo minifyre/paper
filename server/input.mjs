@@ -7,9 +7,18 @@ const
 {config,logic,output,util}=silo,
 input={}
 
-input.httpRequest=function({url},res)
+input.httpRequest=function(req,res)
 {
+	const cookie=util.cookieParse(req.headers.cookie||'')
+
+	if(!cookie.session&&!req.url.match(/^\/login\.html$/))
+	{
+		res.writeHead(301,{'Location':'https://'+req.headers['host']+'/login.html'})
+		res.end()
+	}
+
 	const
+	{url}=req,
 	path=	url.match(/\/$/)?url+'index.html':
 			!(url.split('/')||['']).pop().match(/\./)?url+'/index.html':
 			url,
