@@ -7,15 +7,46 @@ const
 {config,logic,output,util}=silo,
 input={}
 
-input.httpRequest=function(req,res)
+input.httpRequest=async function(req,res)
 {
-	const cookie=util.cookieParse(req.headers.cookie||'')
+	const
+	cookie=util.cookieParse(req.headers.cookie||''),
+	login=req.url.match(/^\/login\.html$/)
 
-	if(!cookie.session&&!req.url.match(/^\/login\.html$/))
+	if(!cookie.session&&!login)
 	{
 		res.writeHead(301,{'Location':'https://'+req.headers['host']+'/login.html'})
 		res.end()
 	}
+	else if (login)
+	{
+		//@todo +rate limiting to block bcrypt-based DDOS
+		let body=''
+
+		//@todo make rest of the function wait on this block
+		req.on('data',data=>body+=data)
+		req.on('end',async function()
+		{
+			const
+			params=new URLSearchParams(body),
+			user=params.get('user'),
+			pwd=params.get('password')
+
+			if(!(user&&pwd)) return
+
+			const
+			db=await util.callback2promise(fs.readFile,'./private/db.json')
+			.then(txt=>JSON.parse(txt))
+			.catch(()=>console.error('private/db.json not found')),
+			valid=db&&await logic.authLogin(db,user,pwd)
+
+			if(valid)
+			{
+				//@todo gen session token & pass it to the browser via a cookie header (+expiration date as well...)
+			}
+		})
+	}
+
 
 	const
 	{url}=req,
