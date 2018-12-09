@@ -50,8 +50,8 @@ output.mkStaticFileServer=function(opts)
 	{port}=Object.assign({},config.server,opts),
 	certOpts=
 	{
-		key:fs.readFileSync('./cert/server.key'),
-		cert:fs.readFileSync('./cert/server.crt')
+		key:fs.readFileSync('./private/server.key'),
+		cert:fs.readFileSync('./private/server.crt')
 	},
 	server=https.createServer(certOpts,input.httpRequest).listen(port)//static http server
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
