@@ -33,7 +33,7 @@ input.login=function(req)
 	})
 }
 
-input.httpRequest=async function(req,res)
+input.request=async function(req,res)
 {
 	const
 	cookie=util.cookieParse(req.headers.cookie||''),
@@ -92,7 +92,7 @@ output.mkStaticFileServer=function(opts)
 		key:fs.readFileSync('./private/server.key'),
 		cert:fs.readFileSync('./private/server.crt')
 	},
-	server=https.createServer(certOpts,input.httpRequest).listen(port)//static http server
+	server=https.createServer(certOpts,input.request).listen(port)//static http server
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
 
 	//upgrade http to https
