@@ -21,7 +21,7 @@ input.login=function(req)
 			user=params.get('user'),
 			pwd=params.get('password')
 
-			if(!(user&&pwd)) return
+			if(!(user&&pwd)) return pass()
 
 			const
 			db=await util.callback2promise(fs.readFile,'./private/db.json')
