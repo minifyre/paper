@@ -1,7 +1,7 @@
 import http from 'http'
 import https from 'https'
 import fs from 'fs'
-import silo from './output.mjs'
+import silo from './output.js'
 
 const
 {config,logic,output,util}=silo,
@@ -54,13 +54,14 @@ input.httpRequest=async function(req,res)
 		}
 	}
 
-
 	const
 	{url}=req,
 	path=	url.match(/\/$/)?url+'index.html':
 			!(url.split('/')||['']).pop().match(/\./)?url+'/index.html':
 			url,
 	type=config.mimeTypes[logic.ext(path)]
+
+	console.log(type)
 
 	//@todo make sure files above paper directory cannot be served up & pass an error code
 	return (path.match(/^\/server/)?Promise.resolve('Access Denied'):output.file('../client'+path))

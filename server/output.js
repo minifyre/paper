@@ -1,7 +1,7 @@
 import compile from '../node_modules/silo/compiler.mjs'
 import fs from 'fs'
 import os from 'os'
-import silo from './logic.mjs'
+import silo from './logic.js'
 
 const
 {config,logic,util}=silo,

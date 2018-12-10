@@ -1,4 +1,4 @@
-import silo from './config.mjs'
+import silo from './config.js'
 
 const
 {config}=silo,
