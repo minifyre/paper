@@ -34,21 +34,15 @@ input.login=function(state,req)
 		})
 	})
 }
-
 input.request=async function(state,req,res)
 {
 	const
 	cookie=util.cookieParse(req.headers.cookie||''),
 	login=!!req.url.match(/^\/login\.html$/)
 
-	if(!cookie.session&&!login)
-	{
-		res.writeHead(301,{'Location':'https://'+req.headers['host']+'/login.html'})
-		res.end()
-
-		return
-	}
-	else if (login)//@todo +rate limiting to block bcrypt-based DDOS
+	//@todo add redirect location as url parameter
+	if(!cookie.session&&!login) return output.redirect(req,res)
+	else if(login)//@todo +rate limiting to block bcrypt-based DDOS
 	{
 		const
 		username=await input.login(state,req),
