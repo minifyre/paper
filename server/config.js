@@ -1,4 +1,11 @@
 const config={}
+config.cookie=
+{
+	session:'-1',
+	SameSite:'strict',
+	HttpOnly:true,
+	Secure:true
+}
 config.mimeTypes=
 {
 	//web
