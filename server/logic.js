@@ -9,11 +9,13 @@ logic.ext=x=>(x.split('.')||['']).pop().toLowerCase()
 logic.authPwdCheck=async (pwd,hash)=>await bcrypt.compare(pwd,hash)
 logic.authPwdHash=async (pwd,saltRounds=10)=>await bcrypt.hash(pwd,saltRounds)
 
-logic.authLogin=async function(db,user,pwd)
+logic.getUser=(state,name)=>Object.values(state.file.users).find(user=>name===user.username)
+
+logic.authLogin=async function(state,username,pwd)
 {
-	const hash=db[user]
-	//user does not exist//@todo add random delay to make less obvious
-	return !hash?false:await logic.authPwdCheck(pwd,hash)
+	const user=logic.getUser(state,username)
+	//@todo add random delay to make it less obvious that user does not exist
+	return !user?false:await logic.authPwdCheck(pwd,user.password)
 }
 
 export default Object.assign(silo,{logic})
