@@ -56,7 +56,12 @@ input.request=async function(state,req,res)
 
 		if(username)
 		{
+			const
+			id=silo.util.id(),
+			expires=Date.now()+(1000*60*60*10),//ms*sec*min*hrs
+			session={id,user:user.id,expires}
 
+			state.file.session[id]=session
 			//@todo gen session token & pass it to the browser via a cookie header (+expiration date as well...)
 		}
 	}
