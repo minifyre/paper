@@ -20,10 +20,11 @@ util.cookieParse=function(txt='')
 	.filter(([key])=>key.length)
 	.reduce((obj,[key,val])=>Object.assign(obj,{[key]:val}),{})
 }
-util.cookieStringify=function(obj)
+util.cookieStringify=function(opts)
 {
-	return Object.entries(obj)
-		.map(([key,val])=>key+'='+val)
-		.join(';')
+	return Object.entries(Object.assign({},config.cookie,opts))
+	.map(arr=>arr.filter(x=>x!==true))
+	.map(arr=>arr.join('='))
+	.join('; ')
 }
 export default Object.assign(silo,{util})
