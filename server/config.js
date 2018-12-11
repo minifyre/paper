@@ -35,6 +35,16 @@ config.response=
 	encoding:'utf-8',
 	type:'application/octet-stream'
 }
-config.server={port:443}
-config.state={files:{},views:{}}
+config.state=
+{
+	file:
+	{
+		users:{},
+		sessions:{}
+	},
+	view:
+	{
+
+	}
+}
 export default {config}
