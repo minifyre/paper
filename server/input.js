@@ -52,11 +52,19 @@ input.request=async function(state,req,res)
 		{
 			const
 			id=silo.util.id(),
-			expires=Date.now()+(1000*60*60*10),//ms*sec*min*hrs
-			session={id,user:user.id,expires}
+			//@todo expires does not seem to be working...
+			expires=Date.now()+(1000*60*60*10)//ms*sec*min*hrs
 
-			state.file.session[id]=session
-			//@todo gen session token & pass it to the browser via a cookie header (+expiration date as well...)
+			state.file.sessions[id]={id,user:user.id,expires:expires.valueOf()}
+
+			res.setHeader('Set-Cookie',util.cookieStringify(
+			{
+				session:id,
+				Expires:new Date(expires).toString().split(' (')[0]
+			}))
+
+			//@todo allow redirects to other pages via url parameter
+			return output.redirect(req,res,'index.html')
 		}
 	}
 	//@todo else check that session is not expired
