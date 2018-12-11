@@ -30,7 +30,7 @@ input.login=function(state,req)
 
 			if(!(user&&pwd)) return pass()
 
-			pass(await logic.authLogin(state,user,pwd))
+			pass(await logic.authLogin(state,user,pwd)?user:false)
 		})
 	})
 }
@@ -50,14 +50,17 @@ input.request=async function(state,req,res)
 	}
 	else if (login)//@todo +rate limiting to block bcrypt-based DDOS
 	{
-		const valid=await input.login(state,req)
+		const
+		username=await input.login(state,req),
+		user=logic.getUser(state,username)
 
-		if(valid)
+		if(username)
 		{
 
 			//@todo gen session token & pass it to the browser via a cookie header (+expiration date as well...)
 		}
 	}
+	//@todo else check that session is not expired
 
 	const
 	{url}=req,
