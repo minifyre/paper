@@ -1,13 +1,20 @@
+import app from './output.js'
+import crypto from 'crypto'
 import http from 'http'
 import https from 'https'
 import fs from 'fs'
-import silo from './output.js'
+
+import silo from '../node_modules/silo/index.js'
+
+//node crypto differs from browser crypto
+silo.util.idRand=()=>crypto.randomBytes(1)
 
 const
-{config,logic,output,util}=silo,
+{config,logic,output,util}=app,
+{curry}=silo.util,
 input={}
 
-input.login=function(req)
+input.login=function(state,req)
 {
 	let body=''
 
@@ -23,33 +30,31 @@ input.login=function(req)
 
 			if(!(user&&pwd)) return pass()
 
-			const
-			db=await util.callback2promise(fs.readFile,'./private/db.json')
-			.then(txt=>JSON.parse(txt))
-			.catch(()=>console.error('private/db.json not found'))
-
-			pass(db&&await logic.authLogin(db,user,pwd))
+			pass(await logic.authLogin(state,user,pwd))
 		})
 	})
 }
 
-input.request=async function(req,res)
+input.request=async function(state,req,res)
 {
 	const
 	cookie=util.cookieParse(req.headers.cookie||''),
-	login=req.url.match(/^\/login\.html$/)
+	login=!!req.url.match(/^\/login\.html$/)
 
 	if(!cookie.session&&!login)
 	{
 		res.writeHead(301,{'Location':'https://'+req.headers['host']+'/login.html'})
 		res.end()
+
+		return
 	}
 	else if (login)//@todo +rate limiting to block bcrypt-based DDOS
 	{
-		const valid=await input.login(req)
+		const valid=await input.login(state,req)
 
 		if(valid)
 		{
+
 			//@todo gen session token & pass it to the browser via a cookie header (+expiration date as well...)
 		}
 	}
@@ -60,8 +65,6 @@ input.request=async function(req,res)
 			!(url.split('/')||['']).pop().match(/\./)?url+'/index.html':
 			url,
 	type=config.mimeTypes[logic.ext(path)]
-
-	console.log(type)
 
 	//@todo make sure files above paper directory cannot be served up & pass an error code
 	return (path.match(/^\/server/)?Promise.resolve('Access Denied'):output.file('../client'+path))
@@ -80,19 +83,19 @@ input.request=async function(req,res)
 	})
 	.then(data=>output.response(res,{data,type}))
 	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
+	//@todo switch to finally and make sure that it doesn't trigger an auto-download
 }
 //@todo move to output
-output.mkStaticFileServer=function(opts)
+output.mkStaticFileServer=function(state)
 {
 	const
 	ip=output.ip(),
-	{port}=Object.assign({},config.server,opts),
 	certOpts=
 	{
 		key:fs.readFileSync('./private/server.key'),
 		cert:fs.readFileSync('./private/server.crt')
 	},
-	server=https.createServer(certOpts,input.request).listen(port)//static http server
+	server=https.createServer(certOpts,curry(input.request,state)).listen(443)//static http server
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
 
 	//upgrade http to https
@@ -106,4 +109,4 @@ output.mkStaticFileServer=function(opts)
 	console.log(`File Server running at https://${ip}/`)
 	return server
 }
-export default Object.assign(silo,{input})
+export default Object.assign(app,{input})
