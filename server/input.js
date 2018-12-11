@@ -67,7 +67,12 @@ input.request=async function(state,req,res)
 			return output.redirect(req,res,'index.html')
 		}
 	}
-	//@todo else check that session is not expired
+	else if(!util.cookieValidate(state,cookie))
+	{
+		delete state.file.sessions[cookie.session]
+		res.setHeader('Set-Cookie',util.cookieStringify())
+		return output.redirect(req,res)
+	}
 
 	const
 	{url}=req,
