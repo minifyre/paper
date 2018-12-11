@@ -52,8 +52,7 @@ input.request=async function(state,req,res)
 		{
 			const
 			id=silo.util.id(),
-			//@todo expires does not seem to be working...
-			expires=Date.now()+(1000*60*60*10)//ms*sec*min*hrs
+			expires=Date.now()+config.sessionLength
 
 			state.file.sessions[id]={id,user:user.id,expires:expires.valueOf()}
 

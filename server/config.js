@@ -6,6 +6,7 @@ config.cookie=
 	HttpOnly:true,
 	Secure:true
 }
+config.sessionLength=1000*60*60*10//ms*sec*min*hrs
 config.mimeTypes=
 {
 	//web
