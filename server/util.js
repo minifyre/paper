@@ -27,4 +27,9 @@ util.cookieStringify=function(opts)
 	.map(arr=>arr.join('='))
 	.join('; ')
 }
+util.cookieValidate=function(state,cookie,now=Date.now())
+{
+	const session=state.file.sessions[cookie.session]
+	return !!session&&session.expires>now
+}
 export default Object.assign(silo,{util})
