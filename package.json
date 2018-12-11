@@ -5,12 +5,14 @@
 	"license": "MIT",
 	"version": "0.5.0",
 	"dependencies": {
+		"bcrypt": "bcrypt",
 		"chant": "minifyre/chant",
 		"code-editor": "minifyre/code-editor",
+		"esm": "^3.0.84",
 		"pane": "minifyre/pane",
+		"qwick": "minifyre/qwick",
 		"tabbed-editor": "minifyre/tabbed-editor",
-		"truth": "minifyre/truth",
-		"qwick": "minifyre/qwick"
+		"truth": "minifyre/truth"
 	},
 	"devDependencies": {
 		"cherub": "minifyre/cherub"

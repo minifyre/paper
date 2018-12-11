@@ -1,7 +1,7 @@
 import compile from '../node_modules/silo/compiler.mjs'
 import fs from 'fs'
 import os from 'os'
-import silo from './logic.mjs'
+import silo from './logic.js'
 
 const
 {config,logic,util}=silo,
@@ -35,7 +35,11 @@ output.response=function(res,opts)
 	res.writeHead(code,{'Content-Type':type})
 	res.end(data,encoding)
 }
-
+output.redirect=function(req,res,path='login.html')
+{
+	res.writeHead(301,{'Location':'https://'+req.headers['host']+'/'+path})
+	res.end()
+}
 output.siloCompilation=async function(path)
 {
 	const dirs=path.split(/\\|\//)

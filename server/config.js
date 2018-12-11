@@ -1,4 +1,12 @@
 const config={}
+config.cookie=
+{
+	session:'-1',
+	SameSite:'strict',
+	HttpOnly:true,
+	Secure:true
+}
+config.sessionLength=1000*60*60*10//ms*sec*min*hrs
 config.mimeTypes=
 {
 	//web
@@ -35,6 +43,16 @@ config.response=
 	encoding:'utf-8',
 	type:'application/octet-stream'
 }
-config.server={port:443}
-config.state={files:{},views:{}}
+config.state=
+{
+	file:
+	{
+		users:{},
+		sessions:{}
+	},
+	view:
+	{
+
+	}
+}
 export default {config}
