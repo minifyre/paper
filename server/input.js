@@ -38,10 +38,17 @@ input.request=async function(state,req,res)
 {
 	const
 	cookie=util.cookieParse(req.headers.cookie||''),
+	validSession=util.cookieValidate(state,cookie),
 	login=!!req.url.match(/^\/login\.html$/)
 
 	//@todo add redirect location as url parameter
-	if(!cookie.session&&!login) return output.redirect(req,res)
+	if(!validSession&&!login)
+	{
+		delete state.file.sessions[cookie.session]
+		res.setHeader('Set-Cookie',util.cookieStringify())
+		return output.redirect(req,res)
+	}
+	else if(validSession&&login) return output.redirect(req,res,'index.html')
 	else if(login)//@todo +rate limiting to block bcrypt-based DDOS
 	{
 		const
@@ -65,12 +72,6 @@ input.request=async function(state,req,res)
 			//@todo allow redirects to other pages via url parameter
 			return output.redirect(req,res,'index.html')
 		}
-	}
-	else if(!util.cookieValidate(state,cookie))
-	{
-		delete state.file.sessions[cookie.session]
-		res.setHeader('Set-Cookie',util.cookieStringify())
-		return output.redirect(req,res)
 	}
 
 	const
