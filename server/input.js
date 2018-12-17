@@ -41,6 +41,8 @@ input.request=async function(state,req,res)
 	validSession=util.cookieValidate(state,cookie),
 	login=!!req.url.match(/^\/login\.html$/)
 
+	console.log(req.url,req.headers.cookie)
+
 	//@todo add redirect location as url parameter
 	if(!validSession&&!login)
 	{
@@ -57,16 +59,18 @@ input.request=async function(state,req,res)
 
 		if(username)
 		{
-			const
-			id=silo.util.id(),
-			expires=Date.now()+config.sessionLength
+			const id=silo.util.id()
 
-			state.file.sessions[id]={id,user:user.id,expires:expires.valueOf()}
+			state.file.sessions[id]=
+			{
+				id,
+				user:user.id,
+				expires:(Date.now()+config.cookie['max-age']*1000)
+			}
 
 			res.setHeader('Set-Cookie',util.cookieStringify(
 			{
 				session:id,
-				Expires:new Date(expires).toString().split(' (')[0]
 			}))
 
 			//@todo allow redirects to other pages via url parameter

@@ -3,10 +3,11 @@ config.cookie=
 {
 	session:'-1',
 	SameSite:'strict',
+	path:'"/"',
+	'max-age':60*60*10,//sec*min*hrs
 	HttpOnly:true,
 	Secure:true
 }
-config.sessionLength=1000*60*60*10//ms*sec*min*hrs
 config.mimeTypes=
 {
 	//web
