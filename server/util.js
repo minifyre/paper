@@ -15,7 +15,7 @@ util.clone=json=>JSON.parse(JSON.stringify(json))
 
 util.cookieParse=function(txt='')
 {
-	return txt.split(';')
+	return txt.split(/; /)
 	.map(keyVal=>keyVal.split('='))
 	.filter(([key])=>key.length)
 	.reduce((obj,[key,val])=>Object.assign(obj,{[key]:val}),{})
