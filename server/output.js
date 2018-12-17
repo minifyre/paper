@@ -1,5 +1,5 @@
 import compile from '../node_modules/silo/compiler.mjs'
-import fs from 'fs'
+import files from '../node_modules/files/fs.js'
 import os from 'os'
 import silo from './logic.js'
 
@@ -7,8 +7,8 @@ const
 {config,logic,util}=silo,
 output={}
 
-output.dir=path=>util.callback2promise(fs.readdir,path)
-output.file=path=>util.callback2promise(fs.readFile,path)
+output.dir=files.readDir
+output.file=files.readFile
 output.index=async function(path)
 {
 	const

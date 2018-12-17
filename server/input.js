@@ -2,7 +2,7 @@ import app from './output.js'
 import crypto from 'crypto'
 import http from 'http'
 import https from 'https'
-import fs from 'fs'
+import files from '../node_modules/files/fs.js'
 
 import silo from '../node_modules/silo/index.js'
 
@@ -41,8 +41,6 @@ input.request=async function(state,req,res)
 	validSession=util.cookieValidate(state,cookie),
 	login=!!req.url.match(/^\/login\.html$/)
 
-	console.log(req.url,req.headers.cookie)
-
 	//@todo add redirect location as url parameter
 	if(!validSession&&!login)
 	{
@@ -67,7 +65,6 @@ input.request=async function(state,req,res)
 				user:user.id,
 				expires:(Date.now()+config.cookie['max-age']*1000)
 			}
-
 			res.setHeader('Set-Cookie',util.cookieStringify(
 			{
 				session:id,
@@ -105,15 +102,13 @@ input.request=async function(state,req,res)
 	//@todo switch to finally and make sure that it doesn't trigger an auto-download
 }
 //@todo move to output
-output.mkStaticFileServer=function(state)
+output.mkStaticFileServer=async function(state)
 {
 	const
+	docs='key,crt'.split(',').map(ext=>'./private/server.'+ext),
+	[key,cert]=await Promise.all(docs.map(file=>files.readFile(file))),
 	ip=output.ip(),
-	certOpts=
-	{
-		key:fs.readFileSync('./private/server.key'),
-		cert:fs.readFileSync('./private/server.crt')
-	},
+	certOpts={key,cert},
 	server=https.createServer(certOpts,curry(input.request,state)).listen(443)//static http server
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
 
