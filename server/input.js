@@ -30,7 +30,8 @@ input.request=async function(state,req,res)
 	const
 	cookie=util.cookieParse(req.headers.cookie||''),
 	validSession=util.cookieValidate(state,cookie),
-	login=!!req.url.match(/^\/login\.html$/)
+	login=!!req.url.match(/^\/login\.html$/),
+	api=!!req.url.match(/^\/api\//)
 
 	//@todo add redirect location as url parameter
 	if(!validSession&&!login)
@@ -61,6 +62,25 @@ input.request=async function(state,req,res)
 			//@todo allow redirects to other pages via url parameter
 			return output.redirect(req,res,'index.html')
 		}
+	}
+	else if(validSession&&api)
+	{
+		const
+		body=await input.requestPost(req),
+		//@todo make this more versital for other types of APIs
+		{type,args:[fn,...args]}=JSON.parse(body)
+
+		if(type==='file')
+		{
+			const op=files[fn]
+			//@todo spinoff error response
+			if(!op) return output.response(res,{code:500,data:fn+' is not a valid file function',type:'text/plain'})
+
+			const data=await files[fn](...args).then(obj=>JSON.stringify(obj))
+
+			return output.response(res,{type:'text/plain',data})
+		}
+		else return output.response(res,{code:500,data:'',type:'text/plain'})
 	}
 
 	const
