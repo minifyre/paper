@@ -13,26 +13,17 @@ const
 {config,logic,output,util}=app,
 {curry}=silo.util,
 input={}
-
-input.login=function(state,req)
+input.login=async function(state,req)
 {
-	let body=''
+	const
+	body=await input.requestPost(req),
+	params=new URLSearchParams(body),
+	user=params.get('user'),
+	pwd=params.get('password')
 
-	return new Promise(function(pass,fail)
-	{
-		req.on('data',data=>body+=data)
-		req.on('end',async function()
-		{
-			const
-			params=new URLSearchParams(body),
-			user=params.get('user'),
-			pwd=params.get('password')
+	if(!(user&&pwd)) return
 
-			if(!(user&&pwd)) return pass()
-
-			pass(await logic.authLogin(state,user,pwd)?user:false)
-		})
-	})
+	return await logic.authLogin(state,user,pwd)?user:false
 }
 input.request=async function(state,req,res)
 {
@@ -97,6 +88,17 @@ input.request=async function(state,req,res)
 	.then(data=>output.response(res,{data,type}))
 	.catch(data=>output.response(res,{code:500,data,type:'text/plain'}))
 	//@todo switch to finally and make sure that it doesn't trigger an auto-download
+}
+input.requestPost=function(req)
+{
+	let body=''
+
+	return new Promise(function(pass,fail)
+	{
+		req.on('data',data=>body+=data)
+		req.on('end',()=>pass(body))
+		req.on('error',fail)
+	})
 }
 //@todo move to output
 output.mkStaticFileServer=async function(state)
