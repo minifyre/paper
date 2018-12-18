@@ -113,12 +113,7 @@ output.mkStaticFileServer=async function(state)
 	//@todo if(err.code==='EADDRINUSE')//port is currently in use
 
 	//upgrade http to https
-	http.createServer(function(req,res)
-	{
-		res.writeHead(301,{'Location':'https://'+req.headers['host']+req.url})
-		res.end()
-	})
-	.listen(80)
+	http.createServer((req,res)=>output.redirect(req,res,req.url)).listen(80)
 
 	console.log(`File Server running at https://${ip}/`)
 	return server
