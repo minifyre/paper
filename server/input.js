@@ -57,18 +57,15 @@ input.request=async function(state,req,res)
 
 		if(username)
 		{
-			const id=silo.util.id()
+			const session=silo.util.id()
 
-			state.file.sessions[id]=
+			state.file.sessions[session]=
 			{
-				id,
+				id:session,
 				user:user.id,
 				expires:(Date.now()+config.cookie['max-age']*1000)
 			}
-			res.setHeader('Set-Cookie',util.cookieStringify(
-			{
-				session:id,
-			}))
+			res.setHeader('Set-Cookie',util.cookieStringify({session}))
 
 			//@todo allow redirects to other pages via url parameter
 			return output.redirect(req,res,'index.html')
