@@ -1,6 +1,35 @@
 <!Doctype html>
-<title>Demo</title>
-<meta charset=utf-8>
+<title>Paper</title>
+<style>
+	html,
+	body
+	{
+		height:100%;
+		margin:0;
+		width:100%;
+	}
+	v-pane
+	{
+		background:#069;
+		display:block;
+		height:100%;
+		width:100%;
+	}
+</style>
+<v-pane></v-pane>
+<script type=module>
+	import pane from './node_modules/v-pane/index.js'
+	onload=pane
+</script>
+<!-- <script type=module>
+	import files from './node_modules/files/client.js'
+
+	// files.read('./')
+	// .then(res=>res.text())
+	// .then(console.log)
+	// .catch(console.error)
+</script> -->
+<!-- <meta charset=utf-8>
 <meta name=mobile-web-app-capable content=yes>
 <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 <style>
@@ -51,4 +80,4 @@
 </style>
 <main class=panes></main>
 <script src="node_modules/qwick/qwick.js"></script>
-<script src=index.js type=module></script>
+<script src=index.js type=module></script> -->
