@@ -8,7 +8,7 @@
 		"bcrypt": "bcrypt",
 		"chant": "minifyre/chant",
 		"code-editor": "minifyre/code-editor",
-		"esm": "^3.0.84",
+		"esm": "^3.2.25",
 		"pane": "minifyre/pane",
 		"qwick": "minifyre/qwick",
 		"tabbed-editor": "minifyre/tabbed-editor",
